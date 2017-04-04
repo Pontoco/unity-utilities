@@ -13,8 +13,25 @@ namespace Utilities {
           Vector3.Dot(v1, v2)) * Mathf.Rad2Deg;
     }
 
+    /// <summary>
+    /// Returns the nearest float to value that is a multiplier of factor.
+    /// </summary>
     public static float NearestMultiple(float value, float factor) {
-      return (float) Math.Round(value / (double) factor, MidpointRounding.AwayFromZero) * factor;
+      return (float) System.Math.Round(value / (double) factor, MidpointRounding.AwayFromZero) * factor;
+    }
+
+    /// <summary>
+    /// Returns the first multiple of factor greater than value.
+    /// </summary>
+    public static float NextHighestMultiple(float value, float factor) {
+      return (float) NextHighestMultiple((double) value, (double) factor);
+    }
+
+    /// <summary>
+    /// Returns the first multiple of factor greater than value.
+    /// </summary>
+    public static double NextHighestMultiple(double value, double factor) {
+      return System.Math.Ceiling(value / factor) * factor;
     }
   }
 }
