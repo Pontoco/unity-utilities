@@ -33,5 +33,13 @@ namespace Utilities {
     public static double NextHighestMultiple(double value, double factor) {
       return System.Math.Ceiling(value / factor) * factor;
     }
+
+    /// <summary>
+    /// Returns the distance between two values in modulo space.
+    /// </summary>
+    public static float DistanceInModulo(float value, float target, float modulo) {
+      var diff = Mathf.Abs(value - target);
+      return Mathf.Min(diff, modulo - diff); 
+    }
   }
 }
