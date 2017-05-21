@@ -1,28 +1,26 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PrintLogToScreen : MonoBehaviour {
-  private string log;
   private readonly Queue my_log_queue = new Queue();
+  private string log;
 
-  void Start() {
+  private void Start() {
     Debug.Log("Log now printing to screen...");
   }
 
-  void Update() {
+  private void Update() {
   }
 
-  void OnEnable() {
+  private void OnEnable() {
     Application.logMessageReceived += HandleLog;
   }
 
-  void OnDisable() {
+  private void OnDisable() {
     Application.logMessageReceived -= HandleLog;
   }
 
-  void HandleLog(string log_string, string stack_trace, LogType type) {
-
+  private void HandleLog(string log_string, string stack_trace, LogType type) {
     string line = "[" + type + "] : " + log + "\n";
     log += line;
 
@@ -30,11 +28,9 @@ public class PrintLogToScreen : MonoBehaviour {
       line = stack_trace + "\n";
       log += line;
     }
-
   }
 
-  void OnGUI() {
+  private void OnGUI() {
     GUILayout.Label(log);
   }
-
 }

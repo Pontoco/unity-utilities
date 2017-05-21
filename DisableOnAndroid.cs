@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DisableOnAndroid : MonoBehaviour {
-	void Start () {
+  private void Start() {
     if (Application.platform == RuntimePlatform.Android) {
       gameObject.SetActive(false);
     }
-	}
+  }
 }
