@@ -13,8 +13,8 @@ public static class Utils
         }
     }
 
-    public static T UnwrapOrDefault<T, V>(this Option<V> option, Func<V, T> map, T default_value)
+    public static T UnwrapOrDefault<T, V>(this Option<V> option, Func<V, T> map, T defaultValue)
     {
-        return option.Match(map, () => default_value);
+        return option.Match(map, () => defaultValue);
     }
 }
