@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 namespace Utilities {
-  public class Math {
+  public class MathUtils {
     /// <summary>
     ///   Determine the signed angle between two vectors, with normal 'n'
     ///   as the rotation axis.
