@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Utilities {
+namespace Utilities.Unity {
   public class MathUtils {
     /// <summary>
     ///   Determine the signed angle between two vectors, with normal 'n'
