@@ -1,28 +1,26 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: UnityEngine.UI.LayoutGroup
-// Assembly: UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A87F162D-47B8-4BE7-B6EA-E656C9C5AA2B
-// Assembly location: /Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-namespace Utilities.Unity
+namespace Utilities.Unity.Layout
 {
     /// <summary>
+    ///     This is a decompiled version of <see cref="LayoutGroup" />. It contains minor
+    ///     modifications, particularly that this LayoutGroup is not an <see cref="ILayoutElement" />,
+    ///     meaning that it does not set its own sizes from its children. This is beneficial when nesting
+    ///     lots of LayoutGroups, to keep the one-way dependence on sizes (parent to child) from creating a
+    ///     reverse dependency.
     ///     <para>Abstract base class to use for layout groups.</para>
     /// </summary>
     [DisallowMultipleComponent]
     [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]
-    public class LayoutGroupBetter : UIBehaviour, ILayoutGroup, ILayoutController
+    public class LayoutGroupPlus : UIBehaviour, ILayoutGroup 
     {
         /// <summary>
         ///     <para>The padding to add around the child layout elements.</para>
@@ -86,7 +84,7 @@ namespace Utilities.Unity
         [NonSerialized]
         private RectTransform m_Rect;
 
-        protected LayoutGroupBetter()
+        protected LayoutGroupPlus()
         {
             if (m_Padding != null)
             {
@@ -117,7 +115,7 @@ namespace Utilities.Unity
         {
             m_RectChildren.Clear();
             List<Component> componentList = new List<Component>(); // TODO: Convert to pooling.
-            
+
             for (int index1 = 0; index1 < rectTransform.childCount; ++index1)
             {
                 RectTransform child = rectTransform.GetChild(index1) as RectTransform;

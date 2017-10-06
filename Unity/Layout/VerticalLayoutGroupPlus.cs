@@ -1,21 +1,17 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: UnityEngine.UI.VerticalLayoutGroup
-// Assembly: UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A87F162D-47B8-4BE7-B6EA-E656C9C5AA2B
-// Assembly location: /Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Utilities.Unity
+namespace Utilities.Unity.Layout
 {
     /// <summary>
-    ///   <para>Layout child layout elements below each other.</para>
+    ///     This is a custom <see cref="VerticalLayoutGroup" /> that is not an
+    ///     <see cref="ILayoutElement" />. See <see cref="LayoutGroupPlus" /> for more information.
+    ///     <para>Layout child layout elements vertically.</para>
     /// </summary>
     [DisallowMultipleComponent]
     [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]
-    public class VerticalLayoutGroupBetter : HorizontalOrVerticalLayoutGroupBetter
+    public class VerticalLayoutGroupPlus : HorizontalOrVerticalLayoutGroupPlus
     {
 
         /// <summary>

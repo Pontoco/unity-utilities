@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
-using UnityEngine.Assertions.Comparers;
 using UnityEngine.UI;
 
-namespace Utilities.Unity
+namespace Utilities.Unity.Layout
 {
+    /// <summary>
+    /// An AspectRatioFitter extension that sets the aspect ratio from the preferredSize of this layout element.
+    /// This is useful for using image / content sizes as the aspect ratio.
+    /// </summary>
     [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]
     [DisallowMultipleComponent]
-    public class AspectRatioFitterPlus : AspectRatioFitter
+    public class PreferredSizeAspectRatioFitter : AspectRatioFitter
     {
         protected override void OnRectTransformDimensionsChange()
         {

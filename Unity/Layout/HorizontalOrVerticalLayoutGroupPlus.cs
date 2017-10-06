@@ -1,23 +1,26 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: UnityEngine.UI.HorizontalOrVerticalLayoutGroup
-// Assembly: UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: A87F162D-47B8-4BE7-B6EA-E656C9C5AA2B
-// Assembly location: /Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll
-
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Utilities.Unity
+namespace Utilities.Unity.Layout
 {
     /// <summary>
-    ///     <para>Abstract base class for HorizontalLayoutGroup and VerticalLayoutGroup.</para>
+    ///     This is a custom <see cref="HorizontalOrVerticalLayoutGroup" /> that is not an
+    ///     <see cref="ILayoutElement" />. See <see cref="LayoutGroupPlus" /> for more information. It also
+    ///     contains a few bugs fixes, here and there.
+    ///     <para>Abstract base class for HorizontalLayoutGroupPlus and VerticalLayoutGroupPlus.</para>
     /// </summary>
     [DisallowMultipleComponent]
     [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]
-    public abstract class HorizontalOrVerticalLayoutGroupBetter : LayoutGroupBetter
+    public abstract class HorizontalOrVerticalLayoutGroupPlus : LayoutGroupPlus
     {
+        private struct Sizes
+        {
+            public float Min;
+            public float Preferred;
+            public float Flexible;
+        }
+
         /// <summary>
         ///     <para>The spacing to use between layout elements in the layout group.</para>
         /// </summary>
@@ -124,21 +127,21 @@ namespace Utilities.Unity
             {
                 var sizes = CalcAlongAxis(axis, isVertical);
                 float pos = axis != 0 ? padding.top : padding.left;
-                if (sizes.flexible == 0.0 && sizes.preferred < (double) parentSize)
+                if (sizes.Flexible == 0.0 && sizes.Preferred < (double) parentSize)
                 {
                     pos = GetStartOffset(axis,
-                        sizes.preferred - (axis != 0 ? padding.vertical : padding.horizontal));
+                        sizes.Preferred - (axis != 0 ? padding.vertical : padding.horizontal));
                 }
                 float t = 0.0f;
-                if (sizes.min != (double) sizes.preferred)
+                if (sizes.Min != (double) sizes.Preferred)
                 {
-                    t = Mathf.Clamp01((float) ((parentSize - (double) sizes.min) /
-                                               (sizes.preferred - (double) sizes.min)));
+                    t = Mathf.Clamp01((float) ((parentSize - (double) sizes.Min) /
+                                               (sizes.Preferred - (double) sizes.Min)));
                 }
                 float flexibleExcess = 0.0f;
-                if (parentSize > (double) sizes.preferred && sizes.flexible > 0.0)
+                if (parentSize > (double) sizes.Preferred && sizes.Flexible > 0.0)
                 {
-                    flexibleExcess = (parentSize - sizes.preferred) / sizes.flexible;
+                    flexibleExcess = (parentSize - sizes.Preferred) / sizes.Flexible;
                 }
                 for (int index = 0; index < rectChildren.Count; ++index)
                 {
@@ -198,7 +201,8 @@ namespace Utilities.Unity
             float b = parentPadding;
             float totalFlexible = 0.0f;
             bool flag = isVertical ^ (axis == 1);
-            foreach (RectTransform t in rectChildren) {
+            foreach (RectTransform t in rectChildren)
+            {
                 float min;
                 float preferred;
                 float flexible;
@@ -224,15 +228,7 @@ namespace Utilities.Unity
             }
             float totalPreferred = Mathf.Max(totalMin, b);
 
-            return new Sizes {min = totalMin, preferred = totalPreferred, flexible = totalFlexible };
-        }
-
-        struct Sizes
-        {
-            public float min;
-            public float preferred;
-            public float flexible;
-
+            return new Sizes {Min = totalMin, Preferred = totalPreferred, Flexible = totalFlexible};
         }
 
         protected override void Reset()

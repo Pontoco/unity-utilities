@@ -3,11 +3,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Utilities.Unity
+namespace Utilities.Unity.Layout
 {
     /// <summary>
-    ///     Convenient event methods for Unity layout events. This lets us only run code if the layout
-    ///     has started, etc. Add this to an object to register events for that objects layout.
+    ///     Convenient event methods for Unity layout events.
+    ///     <p />This includes static events such as "has the layout pass started", etc.
+    ///     <p />This is also a component that can be added to a gameobject to register events for that
+    ///     object's layout.
     /// </summary>
     [ExecuteInEditMode]
     public class LayoutEvents : UIBehaviour
