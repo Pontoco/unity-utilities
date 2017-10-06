@@ -281,7 +281,6 @@ namespace Utilities.Unity
         [DebuggerHidden]
         private IEnumerator DelayedSetDirty(RectTransform rect)
         {
-            Assert.IsFalse(CanvasUpdateRegistry.IsRebuildingLayout());
             LayoutRebuilder.MarkLayoutForRebuild(rect);
             yield return null;
         }
