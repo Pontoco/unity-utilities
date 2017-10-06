@@ -7,21 +7,40 @@ namespace Utilities.Unity
     [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]
     [DisallowMultipleComponent]
-    public class ContentAspectRatioFitter : AspectRatioFitter
+    public class AspectRatioFitterPlus : AspectRatioFitter
     {
         protected override void OnRectTransformDimensionsChange()
         {
+            UpdateAspect();
+            base.OnRectTransformDimensionsChange();
+        }
+
+        private void UpdateAspect()
+        {
             var width = LayoutUtility.GetPreferredSize(GetComponent<RectTransform>(), 0);
             var height = LayoutUtility.GetPreferredSize(GetComponent<RectTransform>(), 1);
-
             var ratio = width / height;
 
             if (!float.IsNaN(ratio))
             {
                 aspectRatio = Mathf.Clamp(ratio, 1f / 1000f, 1000f);
             }
+        }
 
-            base.OnRectTransformDimensionsChange();
+        /// <summary>
+        ///   <para>Method called by the layout system.</para>
+        /// </summary>
+        public override void SetLayoutHorizontal()
+        {
+            UpdateAspect();
+        }
+
+        /// <summary>
+        ///   <para>Method called by the layout system.</para>
+        /// </summary>
+        public override void SetLayoutVertical()
+        {
+            UpdateAspect();
         }
     }
 }
