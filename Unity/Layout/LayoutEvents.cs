@@ -20,7 +20,6 @@ namespace Utilities.Unity.Layout
             public void Rebuild(CanvasUpdate executing)
             {
                 HasFirstLayoutStarted = true;
-                Debug.Log("Rebuild");
                 LayoutEvents.Rebuild.OnNext(executing);
             }
 
