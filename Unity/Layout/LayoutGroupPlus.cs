@@ -40,6 +40,8 @@ namespace Utilities.Unity.Layout
             set { SetProperty(ref m_ChildAlignment, value); }
         }
 
+        public bool UpdateDisabledIfRootLayoutGroup = false;
+
         protected RectTransform rectTransform
         {
             get
@@ -235,7 +237,7 @@ namespace Utilities.Unity.Layout
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
-            if (!isRootLayoutGroup)
+            if (!isRootLayoutGroup && UpdateDisabledIfRootLayoutGroup)
             {
                 return;
             }
