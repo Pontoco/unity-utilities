@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Utilities.Unity.Layout
@@ -99,12 +100,12 @@ namespace Utilities.Unity.Layout
             bool controlSize = axis != 0 ? m_ChildControlHeight : m_ChildControlWidth;
             bool childForceExpand = axis != 0 ? childForceExpandHeight : childForceExpandWidth;
             float alignmentOnAxis = GetAlignmentOnAxis(axis);
+            
             if (isVertical ^ (axis == 1))
             {
                 float internalParentSize = parentSize - (axis != 0 ? padding.vertical : padding.horizontal);
-                for (int index = 0; index < rectChildren.Count; ++index)
-                {
-                    RectTransform rectChild = rectChildren[index];
+                List<RectTransform> rectChildren = GetChildren();
+                foreach (RectTransform rectChild in rectChildren) {
                     float min;
                     float preferred;
                     float flexible;
@@ -144,9 +145,9 @@ namespace Utilities.Unity.Layout
                 {
                     flexibleExcess = (parentSize - sizes.Preferred) / sizes.Flexible;
                 }
-                for (int index = 0; index < rectChildren.Count; ++index)
-                {
-                    RectTransform rectChild = rectChildren[index];
+                
+                List<RectTransform> rectChildren = GetChildren();
+                foreach (RectTransform rectChild in rectChildren) {
                     float min;
                     float preferred;
                     float flexible;
@@ -202,6 +203,7 @@ namespace Utilities.Unity.Layout
             float b = parentPadding;
             float totalFlexible = 0.0f;
             bool flag = isVertical ^ (axis == 1);
+            List<RectTransform> rectChildren = GetChildren();
             foreach (RectTransform t in rectChildren)
             {
                 float min;

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -55,11 +56,6 @@ namespace Utilities.Unity.Layout
             }
         }
 
-        protected List<RectTransform> rectChildren
-        {
-            get { return m_RectChildren; }
-        }
-
         private bool isRootLayoutGroup
         {
             get
@@ -80,9 +76,6 @@ namespace Utilities.Unity.Layout
         protected TextAnchor m_ChildAlignment = TextAnchor.UpperLeft;
 
         protected DrivenRectTransformTracker m_Tracker;
-
-        [NonSerialized]
-        private readonly List<RectTransform> m_RectChildren = new List<RectTransform>();
 
         [NonSerialized]
         private RectTransform m_Rect;
@@ -109,35 +102,28 @@ namespace Utilities.Unity.Layout
         /// <summary>
         ///     <para>Called by the layout system.</para>
         /// </summary>
-        public virtual void CalculateLayoutInputHorizontal()
+        protected List<RectTransform> GetChildren()
         {
-            m_RectChildren.Clear();
-            List<Component> componentList = new List<Component>(); // TODO: Convert to pooling.
+            List<RectTransform> rectChildren = new List<RectTransform>();
 
             for (int index1 = 0; index1 < rectTransform.childCount; ++index1)
             {
                 RectTransform child = rectTransform.GetChild(index1) as RectTransform;
-                if (!(child == null) && child.gameObject.activeInHierarchy)
+                if (child == null || !child.gameObject.activeInHierarchy)
                 {
-                    child.GetComponents(typeof(ILayoutIgnorer), componentList);
-                    if (componentList.Count == 0)
-                    {
-                        m_RectChildren.Add(child);
-                    }
-                    else
-                    {
-                        for (int index2 = 0; index2 < componentList.Count; ++index2)
-                        {
-                            if (!((ILayoutIgnorer) componentList[index2]).ignoreLayout)
-                            {
-                                m_RectChildren.Add(child);
-                                break;
-                            }
-                        }
-                    }
+                    continue;
+                }
+                
+                ILayoutIgnorer[] ignoreComponents = child.GetComponents<ILayoutIgnorer>();
+                
+                // If no ignore components, or one of the ignore components is disabled.
+                if (ignoreComponents.Length == 0 || ignoreComponents.Any(component => !component.ignoreLayout))
+                {
+                    rectChildren.Add(child);
                 }
             }
-            m_Tracker.Clear();
+            
+            return rectChildren;
         }
 
         protected override void OnEnable()
