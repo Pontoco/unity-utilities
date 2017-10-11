@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 namespace Utilities.Unity.Layout
 {
@@ -20,7 +21,7 @@ namespace Utilities.Unity.Layout
     [DisallowMultipleComponent]
     [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]
-    public class LayoutGroupPlus : UIBehaviour, ILayoutGroup 
+    public abstract class LayoutGroupPlus : UIBehaviour, ILayoutGroup 
     {
         /// <summary>
         ///     <para>The padding to add around the child layout elements.</para>
@@ -98,17 +99,12 @@ namespace Utilities.Unity.Layout
         /// <summary>
         ///     <para>Called by the layout system to set the children's positions.</para>
         /// </summary>
-        public virtual void SetLayoutHorizontal()
-        {
-            CalculateLayoutInputHorizontal(); // update children
-        }
+        public abstract void SetLayoutHorizontal();
 
         /// <summary>
         ///     <para>Called by the layout system to set the children's positions.</para>
         /// </summary>
-        public virtual void SetLayoutVertical()
-        {
-        }
+        public abstract void SetLayoutVertical();
 
         /// <summary>
         ///     <para>Called by the layout system.</para>
@@ -232,6 +228,17 @@ namespace Utilities.Unity.Layout
             }
             m_Tracker.Add(this, rect, (DrivenTransformProperties) (3840 | (axis != 0 ? 8196 : 4098)));
             rect.SetInsetAndSizeFromParentEdge(axis != 0 ? RectTransform.Edge.Top : RectTransform.Edge.Left, pos, size);
+        }
+        
+        protected override void OnTransformParentChanged()
+        {
+            base.OnTransformParentChanged();
+            Debug.Log("transform parent changed!");
+            if (!isRootLayoutGroup && UpdateDisabledIfRootLayoutGroup)
+            {
+                return;
+            }
+            SetDirty();
         }
 
         protected override void OnRectTransformDimensionsChange()

@@ -15,6 +15,9 @@ namespace Utilities.Unity.Layout
     public class LayoutEvents : UIBehaviour
     {
         /// A fake canvas element that sits in the registry and listens for events.
+        /// TODO: Bug. This class needs to re-register itself for layout events in LayoutComplete.
+        /// TODO: This class should be removed, as there is no single layout event, rather every frame, Unity
+        /// updates layouts for any elements that marked themselves for update.
         private class LayoutEventReceiver : ICanvasElement
         {
             public void Rebuild(CanvasUpdate executing)

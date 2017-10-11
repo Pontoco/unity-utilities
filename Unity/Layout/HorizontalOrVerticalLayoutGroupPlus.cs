@@ -95,6 +95,7 @@ namespace Utilities.Unity.Layout
         protected void SetChildrenAlongAxis(int axis, bool isVertical)
         {
             float parentSize = rectTransform.rect.size[axis];
+            Debug.Log(gameObject.name + " parent size: " + axis + " : " + parentSize);
             bool controlSize = axis != 0 ? m_ChildControlHeight : m_ChildControlWidth;
             bool childForceExpand = axis != 0 ? childForceExpandHeight : childForceExpandWidth;
             float alignmentOnAxis = GetAlignmentOnAxis(axis);

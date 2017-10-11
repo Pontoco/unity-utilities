@@ -19,7 +19,6 @@ namespace Utilities.Unity.Layout
         /// </summary>
         public override void SetLayoutHorizontal()
         {
-            base.SetLayoutHorizontal();
             this.SetChildrenAlongAxis(0, true);
         }
 
@@ -28,7 +27,6 @@ namespace Utilities.Unity.Layout
         /// </summary>
         public override void SetLayoutVertical()
         {
-            base.SetLayoutVertical();
             this.SetChildrenAlongAxis(1, true);
         }
     }
