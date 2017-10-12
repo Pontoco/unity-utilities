@@ -95,6 +95,15 @@ namespace Utilities.Unity.Layout
             base.OnDisable();
         }
 
+        /// <summary>
+        ///   <para>See MonoBehaviour.OnBeforeTransformParentChanged.</para>
+        /// </summary>
+        protected override void OnBeforeTransformParentChanged()
+        {
+            base.OnBeforeTransformParentChanged();
+            UpdateRect();
+        }
+
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
@@ -107,6 +116,7 @@ namespace Utilities.Unity.Layout
             {
                 return;
             }
+            
             tracker.Clear();
             tracker.Add(this, rectTransform,
                 DrivenTransformProperties.Anchors | DrivenTransformProperties.AnchoredPosition);

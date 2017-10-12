@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -271,11 +272,11 @@ namespace Utilities.Unity.Layout
             }
         }
 
-        [DebuggerHidden]
         private IEnumerator DelayedSetDirty(RectTransform rect)
         {
-            LayoutRebuilder.MarkLayoutForRebuild(rect);
             yield return null;
+            Assert.IsFalse(CanvasUpdateRegistry.IsRebuildingLayout());
+            LayoutRebuilder.MarkLayoutForRebuild(rect);
         }
 
         protected override void OnValidate()

@@ -29,5 +29,21 @@ namespace Utilities {
       }
       return obj;
     }
+    
+    /// <summary>
+    /// Returns if the gameobject has the given component on it. Just a convenience method for readability.
+    /// </summary>
+    public static bool HasComponent<T>(this GameObject obj)
+    {
+      return obj.GetComponent<T>() != null;
+    }
+    
+    /// <summary>
+    /// Returns if the transform's gameobject has the given component on it. Just a convenience method for readability.
+    /// </summary>
+    public static bool HasComponent<T>(this Transform transform)
+    {
+      return transform.GetComponent<T>() != null;
+    }
   }
 }

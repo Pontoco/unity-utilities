@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -6,64 +7,51 @@ using UnityEngine.UI;
 namespace Utilities.Unity.Layout
 {
     /// <summary>
-    ///     Convenient event methods for Unity layout events.
-    ///     <p />This includes static events such as "has the layout pass started", etc.
-    ///     <p />This is also a component that can be added to a gameobject to register events for that
-    ///     object's layout.
+    /// Provides hooks on a MonoBehavior to listen for its RectTransform updates.
     /// </summary>
     [ExecuteInEditMode]
     public class LayoutEvents : UIBehaviour
     {
-        /// A fake canvas element that sits in the registry and listens for events.
-        /// TODO: Bug. This class needs to re-register itself for layout events in LayoutComplete.
-        /// TODO: This class should be removed, as there is no single layout event, rather every frame, Unity
-        /// updates layouts for any elements that marked themselves for update.
-        private class LayoutEventReceiver : ICanvasElement
-        {
-            public void Rebuild(CanvasUpdate executing)
-            {
-                HasFirstLayoutStarted = true;
-                LayoutEvents.Rebuild.OnNext(executing);
-            }
-
-            public void LayoutComplete()
-            {
-                LayoutEvents.LayoutComplete.OnNext(Unit.Default);
-            }
-
-            public void GraphicUpdateComplete()
-            {
-                LayoutEvents.GraphicUpdateComplete.OnNext(Unit.Default);
-            }
-
-            public bool IsDestroyed()
-            {
-                // Don't destroy this object.
-                return false;
-            }
-
-            public Transform transform { get; set; }
-        }
-
-        public static readonly Subject<Unit> LayoutComplete = new Subject<Unit>();
-        public static readonly Subject<Unit> GraphicUpdateComplete = new Subject<Unit>();
-        public static readonly Subject<CanvasUpdate> Rebuild = new Subject<CanvasUpdate>();
-
-        public static bool HasFirstLayoutStarted { get; private set; }
-
         public readonly Subject<Unit> RectTransformDimensionsChange = new Subject<Unit>();
-
-        [RuntimeInitializeOnLoadMethod]
-        private static void InitializeStaticEvents()
-        {
-            CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(new LayoutEventReceiver());
-        }
 
         /// <inheritdoc />
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
             RectTransformDimensionsChange.OnNext(Unit.Default);
+        }
+
+        /// <summary>
+        /// <see cref="LayoutRebuilder.MarkLayoutForRebuild"/> only recurses into children that have ILayoutController
+        /// components. However, they didn't consider that you might have a child further down with an ILayoutController,
+        /// even if the direct descendent of the marked layout doesn't. (there's a non-layout-controller in between).
+        /// This properly handles this case. 
+        /// </summary>
+        public static void MarkLayoutForRebuildRecursive(RectTransform root)
+        {
+            // Queue lets us traverse in breadth-first manner
+            Queue<RectTransform> childrenToVisit = new Queue<RectTransform>();
+            childrenToVisit.Enqueue(root);
+
+            while (childrenToVisit.Count > 0)
+            {
+                var rect = childrenToVisit.Dequeue();
+                foreach (var child in rect.GetChildren())
+                {
+                    childrenToVisit.Enqueue(child);
+                }
+
+                // If the direct parent has an ILayoutController, then this controller will already be updated from that one.
+                if (rect.parent.HasComponent<ILayoutController>() && rect != root)
+                {
+                    continue;
+                }
+
+                if (rect.HasComponent<ILayoutController>())
+                {
+                    LayoutRebuilder.MarkLayoutForRebuild(rect);
+                }
+            }
         }
     }
 }
