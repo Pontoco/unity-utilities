@@ -15,7 +15,6 @@ namespace Utilities.Unity.Layout
     ///         size of the fitted element. Partially decompiled from <see cref="AspectRatioFitter"/>
     ///     </para>
     /// </summary>
-    [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]
     [DisallowMultipleComponent]
     public class ScalingFitter : UIBehaviour, ILayoutSelfController
@@ -117,7 +116,7 @@ namespace Utilities.Unity.Layout
                 return;
             }
             
-            tracker.Clear();
+            tracker.Clear(false);
             tracker.Add(this, rectTransform,
                 DrivenTransformProperties.Anchors | DrivenTransformProperties.AnchoredPosition);
             tracker.Add(this, rectTransform, DrivenTransformProperties.Scale);
