@@ -12,7 +12,7 @@ namespace Utilities.Unity.Layout
     [ExecuteInEditMode]
     public class LayoutEvents : UIBehaviour
     {
-        public readonly Subject<Unit> RectTransformDimensionsChange = new Subject<Unit>();
+        public readonly ReplaySubject<Unit> RectTransformDimensionsChange = new ReplaySubject<Unit>();
 
         /// <inheritdoc />
         protected override void OnRectTransformDimensionsChange()
