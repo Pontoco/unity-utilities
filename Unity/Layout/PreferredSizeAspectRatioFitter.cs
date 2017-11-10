@@ -12,6 +12,11 @@ namespace Utilities.Unity.Layout
     [DisallowMultipleComponent]
     public class PreferredSizeAspectRatioFitter : AspectRatioFitter
     {
+        private void Start()
+        {
+            UpdateAspect();
+        }
+        
         protected override void OnRectTransformDimensionsChange()
         {
             UpdateAspect();
