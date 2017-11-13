@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,11 @@ namespace Utilities.Unity.Layout
     [RequireComponent(typeof(RectTransform))]
     public abstract class HorizontalOrVerticalLayoutGroupPlus : LayoutGroupPlus
     {
+        /// <summary>
+        ///  Fires when this layout's children are updated by this layout. 0 for x axis update, 1 for y axis update.
+        /// </summary>
+        public ReplaySubject<int> LayoutUpdated = new ReplaySubject<int>();
+
         private struct Sizes
         {
             public float Min;
@@ -164,6 +170,8 @@ namespace Utilities.Unity.Layout
                     pos += size + spacing;
                 }
             }
+
+            LayoutUpdated.OnNext(axis);
         }
 
         private void GetChildSizes(RectTransform child, int axis, bool controlSize, bool childForceExpand,
