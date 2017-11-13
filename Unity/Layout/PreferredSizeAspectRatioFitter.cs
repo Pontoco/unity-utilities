@@ -31,7 +31,11 @@ namespace Utilities.Unity.Layout
 
             if (!float.IsNaN(ratio))
             {
-                aspectRatio = Mathf.Clamp(ratio, 1f / 1000f, 1000f);
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (ratio != aspectRatio)
+                {
+                    aspectRatio = Mathf.Clamp(ratio, 1f / 1000f, 1000f);
+                }
             }
         }
 
