@@ -180,10 +180,12 @@ namespace Utilities.Unity.Layout
             UpdateRect();
         }
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             SetDirty();
         }
+#endif
 
         private static bool SetStruct<T>(ref T currentValue, T newValue) where T : struct
         {

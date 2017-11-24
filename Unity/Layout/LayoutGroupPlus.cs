@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -23,7 +22,7 @@ namespace Utilities.Unity.Layout
     [DisallowMultipleComponent]
     [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]
-    public abstract class LayoutGroupPlus : UIBehaviour, ILayoutGroup 
+    public abstract class LayoutGroupPlus : UIBehaviour, ILayoutGroup
     {
         /// <summary>
         ///     <para>The padding to add around the child layout elements.</para>
@@ -114,16 +113,16 @@ namespace Utilities.Unity.Layout
                 {
                     continue;
                 }
-                
+
                 ILayoutIgnorer[] ignoreComponents = child.GetComponents<ILayoutIgnorer>();
-                
+
                 // If no ignore components, or one of the ignore components is disabled.
                 if (ignoreComponents.Length == 0 || ignoreComponents.Any(component => !component.ignoreLayout))
                 {
                     rectChildren.Add(child);
                 }
             }
-            
+
             return rectChildren;
         }
 
@@ -216,7 +215,7 @@ namespace Utilities.Unity.Layout
             m_Tracker.Add(this, rect, (DrivenTransformProperties) (3840 | (axis != 0 ? 8196 : 4098)));
             rect.SetInsetAndSizeFromParentEdge(axis != 0 ? RectTransform.Edge.Top : RectTransform.Edge.Left, pos, size);
         }
-        
+
         protected override void OnTransformParentChanged()
         {
             base.OnTransformParentChanged();
@@ -279,9 +278,11 @@ namespace Utilities.Unity.Layout
             LayoutRebuilder.MarkLayoutForRebuild(rect);
         }
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             SetDirty();
         }
+#endif
     }
 }

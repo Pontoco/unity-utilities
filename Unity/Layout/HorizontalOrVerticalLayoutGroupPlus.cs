@@ -241,11 +241,13 @@ namespace Utilities.Unity.Layout
             return new Sizes {Min = totalMin, Preferred = totalPreferred, Flexible = totalFlexible};
         }
 
+        #if UNITY_EDITOR
         protected override void Reset()
         {
             base.Reset();
             m_ChildControlWidth = false;
             m_ChildControlHeight = false;
         }
+        #endif
     }
 }
