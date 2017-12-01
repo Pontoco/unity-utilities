@@ -15,14 +15,23 @@ public class TheraotHideInVisualStudio : AssetPostprocessor
     public static void OnGeneratedCSProjectFiles()
     {
         // Open the project file
+        var modifiedCount = 0;
         string projectDirectory = System.IO.Directory.GetParent(Application.dataPath).FullName;
         foreach (var fileName in new[]
         {
             "Assembly-CSharp.csproj", "Assembly-CSharp-Editor.csproj", "Assembly-CSharp-Editor-firstpass.csproj",
-            "Assembly-CSharp-firstpass.csproj"
+            "Assembly-CSharp-firstpass.csproj", Application.productName + ".csproj",
+            Application.productName + ".Editor.csproj", Application.productName + "Editor.Plugins.csproj",
+            Application.productName + "Plugins.csproj"
         })
         {
             string projectFile = Path.Combine(projectDirectory, fileName);
+
+            if (!new FileInfo(projectFile).Exists)
+            {
+                modifiedCount++;
+                continue;
+            }
 
             XmlDocument xml = new XmlDocument();
             xml.Load(projectFile);
@@ -48,6 +57,11 @@ public class TheraotHideInVisualStudio : AssetPostprocessor
             }
 
             xml.Save(projectFile);
+        }
+
+        if (modifiedCount == 0)
+        {
+            Debug.LogError("Couldn't find any project files to modify. Make sure the names are included.");
         }
     }
 }
