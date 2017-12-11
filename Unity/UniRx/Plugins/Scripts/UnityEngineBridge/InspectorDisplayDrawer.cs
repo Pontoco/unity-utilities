@@ -4,9 +4,10 @@ using UnityEngine;
 using System.Text.RegularExpressions;
 using System.Collections;
 using System.Linq;
-
+using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
 namespace UniRx
@@ -61,7 +62,6 @@ namespace UniRx
 
 #if UNITY_EDITOR
 
-
     // InspectorDisplay and for Specialized ReactiveProperty
     // If you want to customize other specialized ReactiveProperty
     // [UnityEditor.CustomPropertyDrawer(typeof(YourSpecializedReactiveProperty))]
@@ -102,7 +102,8 @@ namespace UniRx
             var targetSerializedProperty = property.FindPropertyRelative(fieldName);
             if (targetSerializedProperty == null)
             {
-                UnityEditor.EditorGUI.LabelField(position, label, new GUIContent() { text = "InspectorDisplay can't find target:" + fieldName });
+                UnityEditor.EditorGUI.LabelField(position, label,
+                    new GUIContent() {text = "InspectorDisplay can't find target:" + fieldName});
                 if (notifyPropertyChanged)
                 {
                     EditorGUI.EndChangeCheck();
@@ -121,19 +122,29 @@ namespace UniRx
                     property.serializedObject.ApplyModifiedProperties(); // deserialize to field
 
                     var paths = property.propertyPath.Split('.'); // X.Y.Z...
-                    var attachedComponent = property.serializedObject.targetObject;
 
-                    var targetProp = (paths.Length == 1)
-                        ? fieldInfo.GetValue(attachedComponent)
-                        : GetValueRecursive(attachedComponent, 0, paths);
-                    if (targetProp == null) return;
-                    var propInfo = targetProp.GetType().GetProperty(fieldName, BindingFlags.IgnoreCase | BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    var modifiedValue = propInfo.GetValue(targetProp, null); // retrieve new value
-
-                    var methodInfo = targetProp.GetType().GetMethod("SetValueAndForceNotify", BindingFlags.IgnoreCase | BindingFlags.InvokeMethod | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (methodInfo != null)
+                    foreach (Object target in property.serializedObject.targetObjects)
                     {
-                        methodInfo.Invoke(targetProp, new object[] { modifiedValue });
+                        var attachedComponent = target;
+
+                        var targetProp = (paths.Length == 1)
+                            ? fieldInfo.GetValue(attachedComponent)
+                            : GetValueRecursive(attachedComponent, 0, paths);
+                        if (targetProp == null) return;
+                        var propInfo = targetProp.GetType().GetProperty(fieldName,
+                            BindingFlags.IgnoreCase | BindingFlags.GetProperty |
+                            BindingFlags.Instance | BindingFlags.Public |
+                            BindingFlags.NonPublic);
+                        var modifiedValue = propInfo.GetValue(targetProp, null); // retrieve new value
+
+                        var methodInfo = targetProp.GetType().GetMethod("SetValueAndForceNotify",
+                            BindingFlags.IgnoreCase | BindingFlags.InvokeMethod |
+                            BindingFlags.Instance | BindingFlags.Public |
+                            BindingFlags.NonPublic);
+                        if (methodInfo != null)
+                        {
+                            methodInfo.Invoke(targetProp, new object[] {modifiedValue});
+                        }
                     }
                 }
                 else
@@ -146,7 +157,9 @@ namespace UniRx
         object GetValueRecursive(object obj, int index, string[] paths)
         {
             var path = paths[index];
-            var fieldInfo = obj.GetType().GetField(path, BindingFlags.IgnoreCase | BindingFlags.GetField | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            var fieldInfo = obj.GetType().GetField(path,
+                BindingFlags.IgnoreCase | BindingFlags.GetField | BindingFlags.Instance |
+                BindingFlags.Public | BindingFlags.NonPublic);
 
             // If array, path = Array.data[index]
             if (fieldInfo == null && path == "Array")
@@ -168,13 +181,15 @@ namespace UniRx
                 }
                 catch
                 {
-                    Debug.Log("InspectorDisplayDrawer Exception, objType:" + obj.GetType().Name + " path:" + string.Join(", ", paths));
+                    Debug.Log("InspectorDisplayDrawer Exception, objType:" + obj.GetType().Name + " path:" +
+                              string.Join(", ", paths));
                     throw;
                 }
             }
             else if (fieldInfo == null)
             {
-                throw new Exception("Can't decode path, please report to UniRx's GitHub issues:" + string.Join(", ", paths));
+                throw new Exception("Can't decode path, please report to UniRx's GitHub issues:" +
+                                    string.Join(", ", paths));
             }
 
             var v = fieldInfo.GetValue(obj);
@@ -211,8 +226,9 @@ namespace UniRx
                 var multilineAttr = GetMultilineAttribute();
                 if (multilineAttr != null)
                 {
-                    return ((!EditorGUIUtility.wideMode) ? 16f : 0f) + 16f + (float)((multilineAttr.Lines - 1) * 13);
-                };
+                    return ((!EditorGUIUtility.wideMode) ? 16f : 0f) + 16f + (float) ((multilineAttr.Lines - 1) * 13);
+                }
+                ;
             }
 
             if (valueProperty.isExpanded)
@@ -226,7 +242,8 @@ namespace UniRx
             return height;
         }
 
-        protected virtual void EmitPropertyField(Rect position, UnityEditor.SerializedProperty targetSerializedProperty, GUIContent label)
+        protected virtual void EmitPropertyField(Rect position, UnityEditor.SerializedProperty targetSerializedProperty,
+                                                 GUIContent label)
         {
             var multiline = GetMultilineAttribute();
             if (multiline == null)
@@ -234,7 +251,8 @@ namespace UniRx
                 var range = GetRangeAttribute();
                 if (range == null)
                 {
-                    UnityEditor.EditorGUI.PropertyField(position, targetSerializedProperty, label, includeChildren: true);
+                    UnityEditor.EditorGUI.PropertyField(position, targetSerializedProperty, label,
+                        includeChildren: true);
                 }
                 else
                 {
@@ -244,7 +262,8 @@ namespace UniRx
                     }
                     else if (targetSerializedProperty.propertyType == SerializedPropertyType.Integer)
                     {
-                        EditorGUI.IntSlider(position, targetSerializedProperty, (int)range.Min, (int)range.Max, label);
+                        EditorGUI.IntSlider(position, targetSerializedProperty, (int) range.Min, (int) range.Max,
+                            label);
                     }
                     else
                     {
@@ -257,8 +276,9 @@ namespace UniRx
                 var property = targetSerializedProperty;
 
                 label = EditorGUI.BeginProperty(position, label, property);
-                var method = typeof(EditorGUI).GetMethod("MultiFieldPrefixLabel", BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.NonPublic);
-                position = (Rect)method.Invoke(null, new object[] { position, 0, label, 1 });
+                var method = typeof(EditorGUI).GetMethod("MultiFieldPrefixLabel",
+                    BindingFlags.Static | BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.NonPublic);
+                position = (Rect) method.Invoke(null, new object[] {position, 0, label, 1});
 
                 EditorGUI.BeginChangeCheck();
                 int indentLevel = EditorGUI.indentLevel;
