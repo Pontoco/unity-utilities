@@ -1,3 +1,4 @@
+#pragma warning disable CS0618
 #if UNITY_EDITOR
 
 using UnityEditor;
