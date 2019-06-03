@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using Conditions;
-using NUnit.Framework;
 using Optional;
+using UnityEngine.Assertions;
 
 public static class Utils
 {
@@ -80,7 +80,7 @@ public static class Utils
     {
         if (validator.Value % modulo != 0)
         {
-            throw new AssertionException(validator.ArgumentName + ": " + validator.Value + " is not divisible by " + modulo);
+            throw new AssertionException(validator.ArgumentName + ": " + validator.Value + " is not divisible by " + modulo, "");
         }
         return validator;
     }
