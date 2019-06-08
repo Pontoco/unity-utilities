@@ -72,11 +72,16 @@ public static class Utils
     }
 
     /// <summary>
-    /// Unwraps the given option. If the option is a None, returns the given default value instead.
+    /// Unwraps the given option. If the option is a None, returns the given default value instead. Additionally applies a mapping function to the option.
     /// </summary>
-    public static T UnwrapOrDefault<T, V>(this Option<V> option, Func<V, T> map, T defaultValue)
+    public static T GetOrDefault<T, V>(this Option<V> option, Func<V, T> map, T defaultValue)
     {
-        return option.Match(map, () => defaultValue);
+        if (option.HasValue)
+        {
+            return map(option.Value);
+        }
+
+        return defaultValue;
     }
 
 
