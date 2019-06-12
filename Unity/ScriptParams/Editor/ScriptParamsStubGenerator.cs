@@ -74,7 +74,7 @@ namespace Assets.Editor.ScriptParams
             foreach (string path in existingScriptParamStubs)
             {
                 // Remove if we can't find a class that is named the same as the file.
-                var name = Path.GetFileNameWithoutExtension(path).RemoveFromEnd("Params");
+                var name = RemoveFromEnd(Path.GetFileNameWithoutExtension(path), "Params");
                 if (!names.Contains(name))
                 {
                     Debug.Log("Couldn't find ScriptParams object for class named: " + name + ". Removing stub.");
@@ -84,6 +84,18 @@ namespace Assets.Editor.ScriptParams
             }
 
             AssetDatabase.Refresh();
+        }
+
+        private static string RemoveFromEnd(string s, string suffix)
+        {
+            if (s.EndsWith(suffix))
+            {
+                return s.Substring(0, s.Length - suffix.Length);
+            }
+            else
+            {
+                return s;
+            }
         }
     }
 }
