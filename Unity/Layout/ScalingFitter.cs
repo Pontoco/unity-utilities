@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Optional;
-using Optional.Unsafe;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -116,7 +115,7 @@ namespace Utilities.Unity.Layout
                 return;
             }
             
-            tracker.Clear(false);
+            tracker.Clear();
             tracker.Add(this, rectTransform,
                 DrivenTransformProperties.Anchors | DrivenTransformProperties.AnchoredPosition);
             tracker.Add(this, rectTransform, DrivenTransformProperties.Scale);
@@ -129,7 +128,7 @@ namespace Utilities.Unity.Layout
                 Option<Vector2> parentSizeOpt = GetParentSize();
                 if (parentSizeOpt.HasValue)
                 {
-                    var parentSize = parentSizeOpt.ValueOrFailure();
+                    var parentSize = parentSizeOpt.Value;
 
                     // Parent sizes will be zero if this runs at odd times
                     // ReSharper disable CompareOfFloatsByEqualityOperator
@@ -167,7 +166,7 @@ namespace Utilities.Unity.Layout
             if (!parent)
             {
                 Debug.LogWarning("A ScalingFitter component exists on an object with no parent!");
-                return Option.None<Vector2>();
+                return Option<Vector2>.None();
             }
             return parent.rect.size.Some();
         }
