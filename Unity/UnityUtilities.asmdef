@@ -1,7 +1,8 @@
 {
     "name": "UnityUtilities",
     "references": [
-        "GUID:6558744ae8579bd4fabf69c09167376e"
+        "GUID:6558744ae8579bd4fabf69c09167376e",
+        "GUID:41a0499430ed580429eeb9bd7c00f30c"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
