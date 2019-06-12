@@ -1,11 +1,11 @@
-﻿/// Modified from https://github.com/nlkl/Optional/blob/master/LICENSE
+﻿// Modified from https://github.com/nlkl/Optional/blob/master/LICENSE
 
 using System;
 using System.Collections.Generic;
 
 namespace Optional
 {
-    /// <summary>Represents an optional value.</summary>
+    /// <summary>Represents an optional value. It contains either a value of type T, or None. </summary>
     /// <typeparam name="T">The type of the value to be wrapped.</typeparam>
     [Serializable]
     public struct Option<T> : IEquatable<Option<T>>
@@ -14,11 +14,12 @@ namespace Optional
         private readonly T value;
 
         /// <summary>Checks if a value is present.</summary>
-        public bool HasValue
-        {
-            get { return hasValue; }
-        }
+        public bool HasValue => hasValue;
 
+        /// <summary>
+        /// The value currently in the Option. Throws if the option is none.
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
         public T Value
         {
             get
@@ -119,7 +120,7 @@ namespace Optional
                 return "Some(null)";
             }
 
-            return string.Format("Some({0})", value);
+            return $"Some({value})";
         }
 
         /// <summary>Determines if the current optional contains a specified value.</summary>
@@ -147,7 +148,7 @@ namespace Optional
         {
             if (predicate == null)
             {
-                throw new ArgumentNullException("predicate");
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (hasValue)
@@ -178,7 +179,7 @@ namespace Optional
         {
             if (!hasValue)
             {
-                return Option.Some(alternative);
+                return Some(alternative);
             }
 
             return this;
@@ -204,7 +205,7 @@ namespace Optional
         {
             if (alternativeOptionFactory == null)
             {
-                throw new ArgumentNullException("alternativeOptionFactory");
+                throw new ArgumentNullException(nameof(alternativeOptionFactory));
             }
 
             if (!hasValue)
@@ -224,7 +225,7 @@ namespace Optional
                 return this;
             }
 
-            return Option.None<T>();
+            return None();
         }
 
         /// <summary>
@@ -238,6 +239,21 @@ namespace Optional
             }
 
             return Value;
+        }
+
+        /// <summary>Creates an empty Option&lt;T&gt; instance.</summary>
+        /// <returns>An empty optional.</returns>
+        public static Option<T> None()
+        {
+            return new Option<T>(default(T), false);
+        }
+
+        /// <summary>Wraps an existing value in an Option&lt;T&gt; instance.</summary>
+        /// <param name="value">The value to be wrapped.</param>
+        /// <returns>An optional containing the specified value.</returns>
+        public static Option<T> Some(T value)
+        {
+            return new Option<T>(value, true);
         }
     }
 }

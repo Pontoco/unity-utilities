@@ -2,24 +2,6 @@
 
 namespace Optional
 {
-    public static class Option
-    {
-        /// <summary>Creates an empty Option&lt;T&gt; instance.</summary>
-        /// <returns>An empty optional.</returns>
-        public static Option<T> None<T>()
-        {
-            return new Option<T>(default(T), false);
-        }
-
-        /// <summary>Wraps an existing value in an Option&lt;T&gt; instance.</summary>
-        /// <param name="value">The value to be wrapped.</param>
-        /// <returns>An optional containing the specified value.</returns>
-        public static Option<T> Some<T>(T value)
-        {
-            return new Option<T>(value, true);
-        }
-    }
-
     /// <summary>Provides a set of functions for creating optional values.</summary>
     public static class Optional
     {
@@ -41,7 +23,7 @@ namespace Optional
         {
             if (value == null)
             {
-                return Option.None<T>();
+                return Option<T>.None();
             }
 
             return value.Some();
@@ -52,7 +34,7 @@ namespace Optional
         /// <returns>The Option&lt;T&gt; instance.</returns>
         public static Option<T> ToOption<T>(this T? value) where T : struct
         {
-            return value.HasValue ? Option.Some(value.Value) : Option.None<T>();
+            return value.HasValue ? Option<T>.Some(value.Value) : Option<T>.None();
         }
     }
 }
