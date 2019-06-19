@@ -64,7 +64,7 @@ namespace Assets.Editor.ScriptParams
             // Attribute
             Write("[CreateAssetMenu(fileName = \"");
             Write(paramsOuterClassName);
-            Write("Params\", menuName = \"Moonshot/ScriptParams/");
+            Write("Params\", menuName = \"ASG/ScriptParams/");
             Write(paramsOuterClassName);
             Write("Params\", order = 1)] \r\n");
 
