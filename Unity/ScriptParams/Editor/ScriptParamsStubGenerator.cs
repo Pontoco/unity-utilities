@@ -33,7 +33,6 @@ namespace Assets.Editor.ScriptParams
 
             // Find all of the classes that need stubs. Only looks in the main Assembly-CSharp assembly for now.
             // Note(john): If we want to use this for non-main classes, we need to be able to place the generated stubs in those assemblies.
-            AppDomain.CurrentDomain.GetAssemblies().Select(a => a.GetName().Name).PrintOnLines();
             var scriptParamsClasses = AppDomain.CurrentDomain.GetAssemblies().Single(a => a.GetName().Name == assemblyName).GetTypes()
                                                .Where(myType =>
                                                    myType.IsClass && myType.BaseType != null &&
