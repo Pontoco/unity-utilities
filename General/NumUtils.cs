@@ -2,12 +2,27 @@
 
 namespace Utilities
 {
+    /// <summary>
+    /// A collection of utilities for working with numbers, integers, modulos, etc.
+    /// </summary>
     public class NumUtils
     {
+        /// <summary>Returns the nearest float to value that is a multiplier of factor.</summary>
+        public static int NearestMultiple(int value, int factor)
+        {
+            return ((int) Math.Round(value / (double) factor, MidpointRounding.AwayFromZero)) * factor;
+        }
+
         /// <summary>Returns the nearest float to value that is a multiplier of factor.</summary>
         public static float NearestMultiple(float value, float factor)
         {
             return (float) Math.Round(value / (double) factor, MidpointRounding.AwayFromZero) * factor;
+        }
+
+        /// <summary>Returns the first multiple of factor greater than value.</summary>
+        public static int NextHighestMultiple(int value, int factor)
+        {
+            return (int)Math.Ceiling((double)value / factor) * factor;
         }
 
         /// <summary>Returns the first multiple of factor greater than value.</summary>
