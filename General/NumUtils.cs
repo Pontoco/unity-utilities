@@ -93,5 +93,14 @@ namespace Utilities
             var unitValue = MapValueToUnit(value, sourceRangeStart, sourceRangeEnd, clamp);
             return MapUnitToRange(unitValue, destinationRangeStart, destinationRangeEnd, clamp);
         }
+
+        /// <summary>
+        /// Whether the given number is a power of 2.
+        /// </summary>
+        public static bool IsPowerOfTwo(int x)
+        {
+            return (x & (x - 1)) == 0;
+        }
     }
+
 }
