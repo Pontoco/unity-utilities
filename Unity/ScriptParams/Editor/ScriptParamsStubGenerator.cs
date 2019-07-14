@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Assets.Scripts.Utilities;
 using Conditions;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
@@ -23,22 +24,19 @@ namespace Assets.Editor.ScriptParams
         [MenuItem("ASG/Generation/Update ScriptParams Stubs")]
         private static void UpdateStubs()
         {
-            UpdateStubs("Assembly-CSharp", "Global/ScriptParamsStubs");
-            UpdateStubs("Assembly-CSharp-firstpass", "Plugins/ScriptParamsStubs");
+            UpdateStubs(AssemblyUtilities.GetAllAssemblies().ToArray(), "Global/ScriptParamsStubs");
         }
 
-        private static void UpdateStubs(string assemblyName, string stubsFolder)
+        private static void UpdateStubs(Assembly[] assemblies, string stubsFolder)
         {
             Debug.Log("Checking for ScriptParams stubs that need to be added/removed/updated.");
 
-            // Find all of the classes that need stubs. Only looks in the main Assembly-CSharp assembly for now.
-            // Note(john): If we want to use this for non-main classes, we need to be able to place the generated stubs in those assemblies.
-            var scriptParamsClasses = AppDomain.CurrentDomain.GetAssemblies().Single(a => a.GetName().Name == assemblyName).GetTypes()
-                                               .Where(myType =>
+            // Find all of the classes that need stubs. 
+            var scriptParamsClasses = assemblies.SelectMany(assembly => assembly.GetTypes().Where(myType =>
                                                    myType.IsClass && myType.BaseType != null &&
                                                    myType.BaseType.IsGenericType &&
                                                    myType.BaseType.GetGenericTypeDefinition() ==
-                                                   typeof(ScriptParams<>));
+                                                   typeof(ScriptParams<>))).ToArray();
 
             // It's an error for two classes with script params to have the same name!
             List<string> names = scriptParamsClasses.Select(c => c.DeclaringType.Name).ToList();
