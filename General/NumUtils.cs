@@ -101,6 +101,19 @@ namespace Utilities
         {
             return (x & (x - 1)) == 0;
         }
+
+        /// <summary>
+        /// Performs a canonical Modulus operation, where the output is on the range [0, b).
+        /// </summary>
+        public static int PositiveMod(int a, int b)
+        {
+            int c = a % b;
+            if ((c < 0 && b > 0) || (c > 0 && b < 0))
+            {
+                c += b;
+            }
+            return c;
+        }
     }
 
 }
