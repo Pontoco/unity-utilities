@@ -105,12 +105,12 @@ namespace Utilities
         /// <summary>
         /// Performs a canonical Modulus operation, where the output is on the range [0, b).
         /// </summary>
-        public static int PositiveMod(int a, int b)
+        public static int Mod(int value, int modulo)
         {
-            int c = a % b;
-            if ((c < 0 && b > 0) || (c > 0 && b < 0))
+            int c = value % modulo;
+            if ((c < 0 && modulo > 0) || (c > 0 && modulo < 0))
             {
-                c += b;
+                c += modulo;
             }
             return c;
         }
