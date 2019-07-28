@@ -12,9 +12,6 @@ namespace ASG.Utilities.Unity.Testing
         private static int harnessesEnabled = 0;
         private void OnEnable()
         {
-            // Keep around through all scenes.
-            DontDestroyOnLoad(this);
-
             // Listens to all log messages in the console and reports which scenes any errors come from.
             if (harnessesEnabled == 0)
             {
