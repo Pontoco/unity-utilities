@@ -11,7 +11,7 @@ namespace Global.Utilities.Unity
     ///     The default Unity <see cref="Transform" /> is not a struct, and cannot actually be instantiated. Instead we
     ///     use a helper struct whenever we want to pass around these three values as a group.
     /// </remarks>
-    public struct TransformStruct 
+    public struct TransformStruct
     {
         /// <summary>The position value of the transform.</summary>
         public Vector3 Position;
@@ -22,9 +22,7 @@ namespace Global.Utilities.Unity
         /// <summary>The scale value of the transform.</summary>
         public Vector3 Scale;
 
-        /// <summary>
-        /// Creates a default transform with only a position. Other values are set to identities.
-        /// </summary>
+        /// <summary>Creates a default transform with only a position. Other values are set to identities.</summary>
         public TransformStruct(Vector3 pos)
         {
             Position = pos;
@@ -32,9 +30,7 @@ namespace Global.Utilities.Unity
             Scale = Vector3.one;
         }
 
-        /// <summary>
-        /// Creates a default transform with only a position and rotation. Other values are set to identities.
-        /// </summary>
+        /// <summary>Creates a default transform with only a position and rotation. Other values are set to identities.</summary>
         public TransformStruct(Vector3 pos, Quaternion rot)
         {
             Position = pos;
@@ -42,17 +38,28 @@ namespace Global.Utilities.Unity
             Scale = Vector3.one;
         }
 
-        /// <summary>
-        /// Creates a default transform with a position and rotation and scale..
-        /// </summary>
+        /// <summary>Creates a default transform with a position and rotation and scale..</summary>
         public TransformStruct(Vector3 pos, Quaternion rot, Vector3 scl)
         {
             Position = pos;
             Rotation = rot;
             Scale = scl;
         }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return $"(Position: {Position.ToString("R")}, Rotation: {Rotation.ToString("R")}, Scale: {Scale.ToString("R")})";
+        }
     }
 
-
-    // Note: We'll probably want to implement some of the default Transform methods here as we need them.
+    /// <summary>A bunch of helpers for TransformStruct.</summary>
+    public static class TransformStructHelpers
+    {
+        /// <summary>Returns the world transform as a <see cref="TransformStruct" />.</summary>
+        public static TransformStruct ToWorldStruct(this Transform transform)
+        {
+            return new TransformStruct(transform.position, transform.rotation, transform.lossyScale);
+        }
+    }
 }
