@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using System;
+using UniRx;
 
 namespace Utilities
 {
@@ -9,9 +10,9 @@ namespace Utilities
         ///     the second observable is currently true (ie. it's last value was true). This essentially
         ///     filters the first stream based on the current state of the second.
         /// </summary>
-        public static IObservable<T> FilterWithLatestFrom<T>(this IObservable<T> self, IObservable<bool> other)
+        public static UniRx.IObservable<T> FilterWithLatestFrom<T>(this UniRx.IObservable<T> self, UniRx.IObservable<bool> other)
         {
-            return self.WithLatestFrom(other, (exit, pressed) => new Tuple<T, bool>(exit, pressed))
+            return self.WithLatestFrom(other, (exit, pressed) => new UniRx.Tuple<T, bool>(exit, pressed))
                        .Where(tuple => tuple.Item2)
                        .Select(t => t.Item1);
         }
@@ -23,12 +24,17 @@ namespace Utilities
         /// </summary>
         /// <param name="source">The source to filter.</param>
         /// <param name="gatingStream">The stream used to gate the source.</param>
-        public static IObservable<T> GatedOn<T, V>(this IObservable<T> source, IObservable<V> gatingStream)
+        public static UniRx.IObservable<T> GatedOn<T, V>(this UniRx.IObservable<T> source, UniRx.IObservable<V> gatingStream)
         {
             var stamps = gatingStream.Timestamp();
-            return source.WithLatestFrom(stamps, (value, stamp) => new Tuple<T, Timestamped<V>>(value, stamp))
+            return source.WithLatestFrom(stamps, (value, stamp) => new UniRx.Tuple<T, Timestamped<V>>(value, stamp))
                          .DistinctUntilChanged(pair => pair.Item2.Timestamp)
                          .Select(pair => pair.Item1);
+        }
+
+        public static IDisposable Subscribe<Unit>(this UniRx.IObservable<Unit> source, Action operation)
+        {
+            return source.Subscribe(_ => operation());
         }
     }
 }
