@@ -8,7 +8,15 @@ namespace ASG.Utilities.Unity.Testing
 {
     public abstract class UnityTestWithSetup
     {
+        /// <summary>
+        /// The scene we are currently testing.
+        /// </summary>
         private static Option<Scene> currentTestScene = Option<Scene>.None();
+
+        /// <summary>
+        /// If we are currently tearing down the test scene.
+        /// </summary>
+        protected bool tearingDown = false;
 
         /// <summary>The path of the test scene to load when running the test.</summary>
         protected readonly string testSceneName;
@@ -44,10 +52,12 @@ namespace ASG.Utilities.Unity.Testing
         public void TearDown()
         {
             Debug.Log($"Tearing down test [{testSceneName}]...");
+            tearingDown = true;
             SceneManager.UnloadSceneAsync(currentTestScene.Value).completed += _ =>
             {
                 Debug.Log($"Finished tearing down test [{testSceneName}]");
                 currentTestScene = Option<Scene>.None();
+                tearingDown = false;
             };
         }
 
