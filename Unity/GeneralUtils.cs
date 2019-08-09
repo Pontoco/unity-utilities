@@ -3,9 +3,7 @@ using UnityEngine;
 
 namespace Utilities.Unity
 {
-    /// <summary>
-    /// Contains a smattering of general utilties for Unity projects.
-    /// </summary>
+    /// <summary>Contains a smattering of general utilties for Unity projects.</summary>
     public static class GeneralUtils
     {
         /// <summary>Returns the children of this rect transform as an iterable.</summary>
@@ -26,9 +24,7 @@ namespace Utilities.Unity
             }
         }
 
-        /// <summary>
-        /// Returns the first child with the given name.
-        /// </summary>
+        /// <summary>Returns the first child with the given name.</summary>
         public static Transform FirstChildOrDefault(this Transform parent, string name)
         {
             if (parent.childCount == 0)
@@ -44,10 +40,23 @@ namespace Utilities.Unity
                 {
                     return child;
                 }
+
                 result = FirstChildOrDefault(child, name);
             }
 
             return result;
+        }
+
+        /// <summary>Returns the full path to this transform including parents and the name of this gameobject.</summary>
+        /// <returns>A string in the form "rootobject/someobject/otherobject/thisobject"</returns>
+        public static string GetPath(this Transform transform)
+        {
+            if (transform.parent == null)
+            {
+                return "/" + transform.name;
+            }
+
+            return transform.parent.GetPath() + "/" + transform.name;
         }
     }
 }
