@@ -49,7 +49,8 @@ namespace Global.Utilities.Unity
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"(Position: {Position.ToString("R")}, Rotation: {Rotation.ToString("R")}, Scale: {Scale.ToString("R")})";
+            return
+                $"(Position: {Position.ToString("R")}, Rotation: {Rotation.ToString("R")}, Scale: {Scale.ToString("R")})";
         }
     }
 
@@ -60,6 +61,12 @@ namespace Global.Utilities.Unity
         public static TransformStruct ToWorldStruct(this Transform transform)
         {
             return new TransformStruct(transform.position, transform.rotation, transform.lossyScale);
+        }
+
+        /// <summary>Returns the local transform as a <see cref="TransformStruct" />.</summary>
+        public static TransformStruct ToLocalStruct(this Transform transform)
+        {
+            return new TransformStruct(transform.localPosition, transform.localRotation, transform.localScale);
         }
     }
 }
