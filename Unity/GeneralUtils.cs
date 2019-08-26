@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Conditions;
 using UnityEngine;
 
 namespace Utilities.Unity
@@ -35,7 +36,7 @@ namespace Utilities.Unity
             Transform result = null;
             for (int i = 0; i < parent.childCount; i++)
             {
-                var child = parent.GetChild(i);
+                Transform child = parent.GetChild(i);
                 if (child.name == name)
                 {
                     return child;
@@ -57,6 +58,29 @@ namespace Utilities.Unity
             }
 
             return transform.parent.GetPath() + "/" + transform.name;
+        }
+
+        /// <summary>
+        ///     Instantiates the given prefab as disabled, so that we can modify it before Start/Awake get run. Only works on
+        ///     prefabs. Should not be used to clone a game object.
+        ///     <para>The gameobject returned should have SetActive(true) called on it to finish setup.</para>
+        /// </summary>
+        /// <param name="prefab">A prefab asset.</param>
+        /// <param name="worldPosition">The position of the new gameobject in world space.</param>
+        /// <param name="worldRotation">The rotation of the new gameobject in world space.</param>
+        /// <returns>A new gameobject that is not active.</returns>
+        public static GameObject InstantiateDisabled(GameObject prefab, Vector3 worldPosition = new Vector3(),
+                                                     Quaternion worldRotation = new Quaternion())
+        {
+            // Make sure the input is a prefab not an in scene game object.
+            Condition.Requires(prefab.scene.name)
+                     .IsNull("The input to InstantiateDisabled must be a prefab, not an in scene GameObject!");
+
+            bool prevActive = prefab.activeSelf;
+            prefab.SetActive(false);
+            GameObject obj = Object.Instantiate(prefab, worldPosition, worldRotation);
+            prefab.SetActive(prevActive);
+            return obj;
         }
     }
 }
