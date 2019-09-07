@@ -1,0 +1,17 @@
+{
+    "name": "ScriptParams.Editor",
+    "references": [
+        "GUID:4ca59f0cd99a0ac4da8c021ea7388a19"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
