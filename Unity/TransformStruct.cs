@@ -70,10 +70,10 @@ namespace Global.Utilities.Unity
             return new TransformStruct(transform.localPosition, transform.localRotation, transform.localScale);
         }
 
-        /// <summary>Returns the transformation matrix that takes a point from the parent local space to the child space local.</summary>
-        public static Matrix4x4 GetTransformBetween(Transform transformParent, Transform transformChild)
+        /// <summary>Returns the transformation matrix that takes a point from the first space to the second space.</summary>
+        public static Matrix4x4 GetTransformBetween(Transform transformA, Transform transformB)
         {
-            return transformChild.worldToLocalMatrix * transformParent.localToWorldMatrix;
+            return transformB.worldToLocalMatrix * transformA.localToWorldMatrix;
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Global.Utilities.Unity
         }
 
         /// <summary>Extracts a rotation from a transformation matrix. Matrix must be a valid TRS transformation matrix.</summary>
-        private static Quaternion ExtractRotation(this Matrix4x4 matrix)
+        public static Quaternion ExtractRotation(this Matrix4x4 matrix)
         {
             Vector3 forward;
             forward.x = matrix.m02;
@@ -117,7 +117,7 @@ namespace Global.Utilities.Unity
         }
 
         /// <summary>Extracts a translation from a transformation matrix. Matrix must be a valid TRS transformation matrix.</summary>
-        private static Vector3 ExtractTranslation(this Matrix4x4 matrix)
+        public static Vector3 ExtractTranslation(this Matrix4x4 matrix)
         {
             Vector3 position;
             position.x = matrix.m03;
@@ -127,7 +127,7 @@ namespace Global.Utilities.Unity
         }
 
         /// <summary>Extracts a scaling from a transformation matrix. Matrix must be a valid TRS transformation matrix.</summary>
-        private static Vector3 ExtractScale(this Matrix4x4 matrix)
+        public static Vector3 ExtractScale(this Matrix4x4 matrix)
         {
             Vector3 scale;
             scale.x = new Vector4(matrix.m00, matrix.m10, matrix.m20, matrix.m30).magnitude;
