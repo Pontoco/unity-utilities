@@ -1,11 +1,12 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Utilities
 {
     /// <summary>
     /// A collection of utilities for working with numbers, integers, modulos, etc.
     /// </summary>
-    public class NumUtils
+    public static class NumUtils
     {
         /// <summary>Returns the nearest float to value that is a multiplier of factor.</summary>
         public static int NearestMultiple(int value, int factor)
@@ -22,7 +23,7 @@ namespace Utilities
         /// <summary>Returns the first multiple of factor greater than value.</summary>
         public static int NextHighestMultiple(int value, int factor)
         {
-            return (int)Math.Ceiling((double)value / factor) * factor;
+            return (int) Math.Ceiling((double) value / factor) * factor;
         }
 
         /// <summary>Returns the first multiple of factor greater than value.</summary>
@@ -66,6 +67,7 @@ namespace Utilities
             {
                 unitValue = Clamp(unitValue, 0, 1);
             }
+
             return start + (end - start) * unitValue;
         }
 
@@ -112,8 +114,60 @@ namespace Utilities
             {
                 c += modulo;
             }
+
             return c;
         }
-    }
 
+        /// <summary>
+        /// Returns the nearest value X to TargetValue, such that X = Value + M*Increment, for some number M.
+        /// Equivalent to adding/subtracting multiples of Increment from Value, until as close as possible to TargetValue.
+        /// </summary>
+        public static float NearestValueByIncrement(float value, float targetValue, float increment)
+        {
+            // Slightly modified version of this equation: https://stackoverflow.com/questions/29557459/round-to-nearest-multiple-of-a-number
+            float number = targetValue - value;
+            float normalized = Mathf.Floor((number + increment / 2) / increment) * increment;
+            float result = normalized + value;
+            return result;
+        }
+
+        /// <summary>
+        /// The square magnitude of a quaternion.
+        /// </summary>
+        public static float SquareMagnitude(this Quaternion quat)
+        {
+            return quat.x * quat.x + quat.y * quat.y + quat.z * quat.z + quat.w * quat.w;
+        }
+
+        /// <summary>
+        /// Returns the Swing/Twist decomposition of a Quaternion. Useful for smooth lerping. See google for more information.
+        /// </summary>
+        /// <param name="twistAxis">The starting forward direction that the rotation q is being applied to.</param>
+        /// <param name="q">A rotation to decompose</param>
+        /// <param name="swing">The swing component of q.</param>
+        /// <param name="twist">The twist component of q.</param>
+        public static void SwingTwistDecomposition(this Quaternion q, Vector3 twistAxis, out Quaternion swing,
+                                                   out Quaternion twist)
+        {
+            // Vector part projected onto twist axis
+            Vector3 projection = Vector3.Dot(twistAxis, new Vector3(q.x, q.y, q.z)) * twistAxis;
+
+            // Twist quaternion
+            twist = new Quaternion(projection.x, projection.y, projection.z, q.w);
+
+            // Singularity close to 180deg
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (twist.SquareMagnitude() == 0.0f)
+            {
+                twist = Quaternion.identity;
+            }
+            else
+            {
+                twist = Quaternion.Normalize(twist);
+            }
+
+            // Set swing
+            swing = q * Quaternion.Inverse(twist);
+        }
+    }
 }
