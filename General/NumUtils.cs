@@ -3,15 +3,13 @@ using UnityEngine;
 
 namespace Utilities
 {
-    /// <summary>
-    /// A collection of utilities for working with numbers, integers, modulos, etc.
-    /// </summary>
+    /// <summary>A collection of utilities for working with numbers, integers, modulos, etc.</summary>
     public static class NumUtils
     {
         /// <summary>Returns the nearest float to value that is a multiplier of factor.</summary>
         public static int NearestMultiple(int value, int factor)
         {
-            return ((int) Math.Round(value / (double) factor, MidpointRounding.AwayFromZero)) * factor;
+            return (int) Math.Round(value / (double) factor, MidpointRounding.AwayFromZero) * factor;
         }
 
         /// <summary>Returns the nearest float to value that is a multiplier of factor.</summary>
@@ -57,8 +55,8 @@ namespace Utilities
 
         /// <summary>Linearly maps a given value [0,1] to the range start..end.</summary>
         /// <param name="clamp">
-        ///     Whether to force the final value to be within start/end or to allow the linear
-        ///     interpolation to extend outside (if value > 1, for instance).
+        ///     Whether to force the final value to be within start/end or to allow the linear interpolation to
+        ///     extend outside (if value > 1, for instance).
         /// </param>
         /// <returns></returns>
         public static float MapUnitToRange(float unitValue, float start, float end, bool clamp = false)
@@ -73,8 +71,8 @@ namespace Utilities
 
         /// <summary>Takes a number (-inf..+inf) and two bounds and maps to 0..1 inside a given bounds.</summary>
         /// <param name="clamp">
-        ///     Whether to force the final value to be within start/end or to allow the linear
-        ///     interpolation to extend outside (if value > 1, for instance).
+        ///     Whether to force the final value to be within start/end or to allow the linear interpolation to
+        ///     extend outside (if value > 1, for instance).
         /// </param>
         /// <returns></returns>
         public static float MapValueToUnit(float fullValue, float start, float end, bool clamp = false)
@@ -96,21 +94,17 @@ namespace Utilities
             return MapUnitToRange(unitValue, destinationRangeStart, destinationRangeEnd, clamp);
         }
 
-        /// <summary>
-        /// Whether the given number is a power of 2.
-        /// </summary>
+        /// <summary>Whether the given number is a power of 2.</summary>
         public static bool IsPowerOfTwo(int x)
         {
             return (x & (x - 1)) == 0;
         }
 
-        /// <summary>
-        /// Performs a canonical Modulus operation, where the output is on the range [0, b).
-        /// </summary>
+        /// <summary>Performs a canonical Modulus operation, where the output is on the range [0, b).</summary>
         public static int Mod(int value, int modulo)
         {
             int c = value % modulo;
-            if ((c < 0 && modulo > 0) || (c > 0 && modulo < 0))
+            if (c < 0 && modulo > 0 || c > 0 && modulo < 0)
             {
                 c += modulo;
             }
@@ -119,8 +113,8 @@ namespace Utilities
         }
 
         /// <summary>
-        /// Returns the nearest value X to TargetValue, such that X = Value + M*Increment, for some number M.
-        /// Equivalent to adding/subtracting multiples of Increment from Value, until as close as possible to TargetValue.
+        ///     Returns the nearest value X to TargetValue, such that X = Value + M*Increment, for some number M. Equivalent
+        ///     to adding/subtracting multiples of Increment from Value, until as close as possible to TargetValue.
         /// </summary>
         public static float NearestValueByIncrement(float value, float targetValue, float increment)
         {
@@ -131,16 +125,15 @@ namespace Utilities
             return result;
         }
 
-        /// <summary>
-        /// The square magnitude of a quaternion.
-        /// </summary>
+        /// <summary>The square magnitude of a quaternion.</summary>
         public static float SquareMagnitude(this Quaternion quat)
         {
             return quat.x * quat.x + quat.y * quat.y + quat.z * quat.z + quat.w * quat.w;
         }
 
         /// <summary>
-        /// Returns the Swing/Twist decomposition of a Quaternion. Useful for smooth lerping. See google for more information.
+        ///     Returns the Swing/Twist decomposition of a Quaternion. Useful for smooth lerping. See google for more
+        ///     information.
         /// </summary>
         /// <param name="twistAxis">The starting forward direction that the rotation q is being applied to.</param>
         /// <param name="q">A rotation to decompose</param>
