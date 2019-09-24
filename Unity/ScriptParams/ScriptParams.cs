@@ -28,7 +28,7 @@ namespace Assets.Scripts.Utilities
                 if (cachedInstance == null)
                 {
                     // Generally just load all resources.
-                    Resources.LoadAll<T>("");
+                    Resources.LoadAll<T>("ScriptParams");
 
                     var paramsObjects = Resources.FindObjectsOfTypeAll<T>();
                     paramsObjects.Length.Requires()
