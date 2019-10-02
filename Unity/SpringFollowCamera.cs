@@ -3,8 +3,8 @@
 namespace Assets.Scripts.Utilities
 {
     /// <summary>
-    ///     Causes an object to maintain a given relative position to the camera object. Movement has
-    ///     a spring to it, isn't instant.
+    ///     Causes an object to maintain a given relative position to the camera object. Movement has a spring to it,
+    ///     isn't instant.
     /// </summary>
     public class SpringFollowCamera : MonoBehaviour
     {
@@ -33,10 +33,7 @@ namespace Assets.Scripts.Utilities
             }
         }
 
-        /// <summary>
-        ///     Update position and rotation of this canvas object to face the camera using lerp for
-        ///     smoothness.
-        /// </summary>
+        /// <summary>Update position and rotation of this canvas object to face the camera using lerp for smoothness.</summary>
         private void Update()
         {
             // Move the object in front of the camera.

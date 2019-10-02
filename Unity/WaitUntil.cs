@@ -7,10 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace ASG.Utilites.Unity
 {
-    /// <summary>
-    ///     Suspends the coroutine execution, with a timeout, until the supplied delegate evaluates to
-    ///     true.
-    /// </summary>
+    /// <summary>Suspends the coroutine execution, with a timeout, until the supplied delegate evaluates to true.</summary>
     public sealed class WaitUntilWithTimeout : CustomYieldInstruction
     {
         public override bool keepWaiting
@@ -21,6 +18,7 @@ namespace ASG.Utilites.Unity
                 {
                     throw new TimeoutException(m_message);
                 }
+
                 return !m_Predicate();
             }
         }
@@ -28,7 +26,7 @@ namespace ASG.Utilites.Unity
         private readonly Func<bool> m_Predicate;
         private readonly float m_timeout;
         private readonly string m_message;
-        private float startTime;
+        private readonly float startTime;
 
         /// <summary>Suspends the coroutine execution until delegate evaluates to true</summary>
         /// <throws>TimeOutException() after the specified time</throws>
@@ -44,10 +42,7 @@ namespace ASG.Utilites.Unity
     /// <summary>Suspends the coroutine execution, until the scene is fully loaded</summary>
     public sealed class LoadSceneAndWaitUntilReady : CustomYieldInstruction
     {
-        public override bool keepWaiting
-        {
-            get { return sceneloading.MoveNext(); }
-        }
+        public override bool keepWaiting => sceneloading.MoveNext();
 
         private readonly IEnumerator sceneloading;
 
@@ -74,6 +69,7 @@ namespace ASG.Utilites.Unity
             {
                 yield return null;
             }
+
             yield return null;
             yield return null;
         }
@@ -92,6 +88,7 @@ namespace ASG.Utilites.Unity
             {
                 yield return null;
             }
+
             yield return null;
             yield return null;
         }
@@ -99,15 +96,17 @@ namespace ASG.Utilites.Unity
 
     public sealed class WaitUntilSceneReady : CustomYieldInstruction
     {
-        private IEnumerator sceneloading;
-        private Scene currentScene;
+        /// <inheritdoc />
+        public override bool keepWaiting => sceneloading.MoveNext();
+
+        private readonly IEnumerator sceneloading;
+        private readonly Scene currentScene;
 
         public WaitUntilSceneReady(string scenename, float timeout)
         {
             sceneloading = WaitForScene(scenename, timeout);
             currentScene = SceneManager.GetActiveScene();
         }
-
 
         private IEnumerator WaitForScene(string m_scenename, float m_timeout)
         {
@@ -117,14 +116,9 @@ namespace ASG.Utilites.Unity
             {
                 yield return null;
             }
-            yield return null;
-            yield return null;
-        }
 
-        /// <inheritdoc />
-        public override bool keepWaiting
-        {
-            get { return sceneloading.MoveNext(); }
+            yield return null;
+            yield return null;
         }
     }
 }

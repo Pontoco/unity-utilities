@@ -10,15 +10,12 @@ namespace Optional
     [Serializable]
     public struct Option<T> : IEquatable<Option<T>>
     {
-        private readonly bool hasValue;
         private readonly T value;
 
         /// <summary>Checks if a value is present.</summary>
-        public bool HasValue => hasValue;
+        public bool HasValue { get; }
 
-        /// <summary>
-        /// The value currently in the Option. Throws if the option is none.
-        /// </summary>
+        /// <summary>The value currently in the Option. Throws if the option is none.</summary>
         /// <exception cref="InvalidOperationException"></exception>
         public T Value
         {
@@ -37,7 +34,7 @@ namespace Optional
         internal Option(T value, bool hasValue)
         {
             this.value = value;
-            this.hasValue = hasValue;
+            HasValue = hasValue;
         }
 
         /// <summary>Determines whether two optionals are equal.</summary>
@@ -45,12 +42,12 @@ namespace Optional
         /// <returns>A boolean indicating whether or not the optionals are equal.</returns>
         public bool Equals(Option<T> other)
         {
-            if (!hasValue && !other.hasValue)
+            if (!HasValue && !other.HasValue)
             {
                 return true;
             }
 
-            if (hasValue && other.hasValue)
+            if (HasValue && other.HasValue)
             {
                 return EqualityComparer<T>.Default.Equals(value, other.value);
             }
@@ -93,7 +90,7 @@ namespace Optional
         /// <returns>A hash code for the current optional.</returns>
         public override int GetHashCode()
         {
-            if (!hasValue)
+            if (!HasValue)
             {
                 return 0;
             }
@@ -110,7 +107,7 @@ namespace Optional
         /// <returns>A string that represents the current optional.</returns>
         public override string ToString()
         {
-            if (!hasValue)
+            if (!HasValue)
             {
                 return "None";
             }
@@ -128,7 +125,7 @@ namespace Optional
         /// <returns>A boolean indicating whether or not the value was found.</returns>
         public bool Contains(T value)
         {
-            if (!hasValue)
+            if (!HasValue)
             {
                 return false;
             }
@@ -151,7 +148,7 @@ namespace Optional
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            if (hasValue)
+            if (HasValue)
             {
                 return predicate(value);
             }
@@ -164,7 +161,7 @@ namespace Optional
         /// <returns>The existing or alternative value.</returns>
         public T ValueOr(T alternative)
         {
-            if (!hasValue)
+            if (!HasValue)
             {
                 return alternative;
             }
@@ -177,7 +174,7 @@ namespace Optional
         /// <returns>A new optional, containing either the existing or alternative value.</returns>
         public Option<T> Or(T alternative)
         {
-            if (!hasValue)
+            if (!HasValue)
             {
                 return Some(alternative);
             }
@@ -190,7 +187,7 @@ namespace Optional
         /// <returns>The alternative optional, if no value is present, otherwise itself.</returns>
         public Option<T> Else(Option<T> alternativeOption)
         {
-            if (!hasValue)
+            if (!HasValue)
             {
                 return alternativeOption;
             }
@@ -208,7 +205,7 @@ namespace Optional
                 throw new ArgumentNullException(nameof(alternativeOptionFactory));
             }
 
-            if (!hasValue)
+            if (!HasValue)
             {
                 return alternativeOptionFactory();
             }
@@ -220,7 +217,7 @@ namespace Optional
         /// <returns>The filtered optional.</returns>
         public Option<T> NotNull()
         {
-            if (!hasValue || value != null)
+            if (!HasValue || value != null)
             {
                 return this;
             }
@@ -228,12 +225,10 @@ namespace Optional
             return None();
         }
 
-        /// <summary>
-        /// Returns the value if it exists, or throw the custom error message if it doesn't.
-        /// </summary>
+        /// <summary>Returns the value if it exists, or throw the custom error message if it doesn't.</summary>
         public T ValueOrFailure(string failureMessage)
         {
-            if (!hasValue)
+            if (!HasValue)
             {
                 throw new InvalidOperationException(failureMessage);
             }
@@ -245,7 +240,7 @@ namespace Optional
         /// <returns>An empty optional.</returns>
         public static Option<T> None()
         {
-            return new Option<T>(default(T), false);
+            return new Option<T>(default, false);
         }
 
         /// <summary>Wraps an existing value in an Option&lt;T&gt; instance.</summary>

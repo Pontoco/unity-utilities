@@ -7,16 +7,14 @@ using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
-using Debug = UnityEngine.Debug;
 
 namespace Utilities.Unity.Layout
 {
     /// <summary>
-    ///     This is a decompiled version of <see cref="LayoutGroup" />. It contains minor
-    ///     modifications, particularly that this LayoutGroup is not an <see cref="ILayoutElement" />,
-    ///     meaning that it does not set its own sizes from its children. This is beneficial when nesting
-    ///     lots of LayoutGroups, to keep the one-way dependence on sizes (parent to child) from creating a
-    ///     reverse dependency.
+    ///     This is a decompiled version of <see cref="LayoutGroup" />. It contains minor modifications, particularly that
+    ///     this LayoutGroup is not an <see cref="ILayoutElement" />, meaning that it does not set its own sizes from its
+    ///     children. This is beneficial when nesting lots of LayoutGroups, to keep the one-way dependence on sizes (parent to
+    ///     child) from creating a reverse dependency.
     ///     <para>Abstract base class to use for layout groups.</para>
     /// </summary>
     [DisallowMultipleComponent]
@@ -29,8 +27,8 @@ namespace Utilities.Unity.Layout
         /// </summary>
         public RectOffset padding
         {
-            get { return m_Padding; }
-            set { SetProperty(ref m_Padding, value); }
+            get => m_Padding;
+            set => SetProperty(ref m_Padding, value);
         }
 
         /// <summary>
@@ -38,11 +36,9 @@ namespace Utilities.Unity.Layout
         /// </summary>
         public TextAnchor childAlignment
         {
-            get { return m_ChildAlignment; }
-            set { SetProperty(ref m_ChildAlignment, value); }
+            get => m_ChildAlignment;
+            set => SetProperty(ref m_ChildAlignment, value);
         }
-
-        public bool UpdateDisabledIfRootLayoutGroup = false;
 
         protected RectTransform rectTransform
         {
@@ -52,6 +48,7 @@ namespace Utilities.Unity.Layout
                 {
                     m_Rect = GetComponent<RectTransform>();
                 }
+
                 return m_Rect;
             }
         }
@@ -64,9 +61,12 @@ namespace Utilities.Unity.Layout
                 {
                     return true;
                 }
+
                 return transform.parent.GetComponent(typeof(ILayoutGroup)) == null;
             }
         }
+
+        public bool UpdateDisabledIfRootLayoutGroup;
 
         [SerializeField]
         protected RectOffset m_Padding = new RectOffset();
@@ -86,7 +86,27 @@ namespace Utilities.Unity.Layout
             {
                 return;
             }
+
             m_Padding = new RectOffset();
+        }
+
+        /// <summary>
+        ///     <para>Returns the calculated position of the first child layout element along the given axis.</para>
+        /// </summary>
+        /// <param name="axis">The axis index. 0 is horizontal and 1 is vertical.</param>
+        /// <param name="requiredSpaceWithoutPadding">
+        ///     The total space required on the given axis for all the layout elements
+        ///     including spacing and excluding padding.
+        /// </param>
+        /// <returns>
+        ///     <para>The position of the first child along the given axis.</para>
+        /// </returns>
+        protected float GetStartOffset(int axis, float requiredSpaceWithoutPadding)
+        {
+            float num1 = requiredSpaceWithoutPadding + (axis != 0 ? padding.vertical : padding.horizontal);
+            float num2 = rectTransform.rect.size[axis] - num1;
+            float alignmentOnAxis = GetAlignmentOnAxis(axis);
+            return (axis != 0 ? padding.top : padding.left) + num2 * alignmentOnAxis;
         }
 
         /// <summary>
@@ -151,28 +171,9 @@ namespace Utilities.Unity.Layout
         }
 
         /// <summary>
-        ///     <para>Returns the calculated position of the first child layout element along the given axis.</para>
-        /// </summary>
-        /// <param name="axis">The axis index. 0 is horizontal and 1 is vertical.</param>
-        /// <param name="requiredSpaceWithoutPadding">
-        ///     The total space required on the given axis for all the
-        ///     layout elements including spacing and excluding padding.
-        /// </param>
-        /// <returns>
-        ///     <para>The position of the first child along the given axis.</para>
-        /// </returns>
-        protected float GetStartOffset(int axis, float requiredSpaceWithoutPadding)
-        {
-            float num1 = requiredSpaceWithoutPadding + (axis != 0 ? padding.vertical : padding.horizontal);
-            float num2 = rectTransform.rect.size[axis] - num1;
-            float alignmentOnAxis = GetAlignmentOnAxis(axis);
-            return (axis != 0 ? padding.top : padding.left) + num2 * alignmentOnAxis;
-        }
-
-        /// <summary>
         ///     <para>
-        ///         Returns the alignment on the specified axis as a fraction where 0 is lefttop, 0.5 is
-        ///         middle, and 1 is rightbottom.
+        ///         Returns the alignment on the specified axis as a fraction where 0 is lefttop, 0.5 is middle, and 1 is
+        ///         rightbottom.
         ///     </para>
         /// </summary>
         /// <param name="axis">The axis to get alignment along. 0 is horizontal and 1 is vertical.</param>
@@ -185,6 +186,7 @@ namespace Utilities.Unity.Layout
             {
                 return (int) childAlignment % 3 * 0.5f;
             }
+
             return (int) childAlignment / 3 * 0.5f;
         }
 
@@ -194,6 +196,7 @@ namespace Utilities.Unity.Layout
             {
                 return;
             }
+
             m_Tracker.Add(this, rect, (DrivenTransformProperties) (3840 | (axis != 0 ? 4 : 2)));
             rect.SetInsetAndSizeFromParentEdge(axis != 0 ? RectTransform.Edge.Top : RectTransform.Edge.Left, pos,
                 rect.sizeDelta[axis]);
@@ -212,6 +215,7 @@ namespace Utilities.Unity.Layout
             {
                 return;
             }
+
             m_Tracker.Add(this, rect, (DrivenTransformProperties) (3840 | (axis != 0 ? 8196 : 4098)));
             rect.SetInsetAndSizeFromParentEdge(axis != 0 ? RectTransform.Edge.Top : RectTransform.Edge.Left, pos, size);
         }
@@ -224,6 +228,7 @@ namespace Utilities.Unity.Layout
             {
                 return;
             }
+
             SetDirty();
         }
 
@@ -234,6 +239,7 @@ namespace Utilities.Unity.Layout
             {
                 return;
             }
+
             SetDirty();
         }
 
@@ -248,6 +254,7 @@ namespace Utilities.Unity.Layout
             {
                 return;
             }
+
             currentValue = newValue;
             SetDirty();
         }
@@ -261,6 +268,7 @@ namespace Utilities.Unity.Layout
             {
                 return;
             }
+
             if (!CanvasUpdateRegistry.IsRebuildingLayout())
             {
                 LayoutRebuilder.MarkLayoutForRebuild(rectTransform);

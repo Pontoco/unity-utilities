@@ -14,8 +14,8 @@ namespace Optional
         }
 
         /// <summary>
-        ///     Creates an Option&lt;T&gt; instance from a specified value. If the value is null, an empty
-        ///     optional is returned.
+        ///     Creates an Option&lt;T&gt; instance from a specified value. If the value is null, an empty optional is
+        ///     returned.
         /// </summary>
         /// <param name="value">The value to wrap.</param>
         /// <returns>An optional containing the specified value.</returns>

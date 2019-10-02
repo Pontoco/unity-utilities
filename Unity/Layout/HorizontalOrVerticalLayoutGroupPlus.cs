@@ -6,9 +6,8 @@ using UnityEngine.UI;
 namespace Utilities.Unity.Layout
 {
     /// <summary>
-    ///     This is a custom <see cref="HorizontalOrVerticalLayoutGroup" /> that is not an
-    ///     <see cref="ILayoutElement" />. See <see cref="LayoutGroupPlus" /> for more information. It also
-    ///     contains a few bugs fixes, here and there.
+    ///     This is a custom <see cref="HorizontalOrVerticalLayoutGroup" /> that is not an <see cref="ILayoutElement" />.
+    ///     See <see cref="LayoutGroupPlus" /> for more information. It also contains a few bugs fixes, here and there.
     ///     <para>Abstract base class for HorizontalLayoutGroupPlus and VerticalLayoutGroupPlus.</para>
     /// </summary>
     [DisallowMultipleComponent]
@@ -16,11 +15,6 @@ namespace Utilities.Unity.Layout
     [RequireComponent(typeof(RectTransform))]
     public abstract class HorizontalOrVerticalLayoutGroupPlus : LayoutGroupPlus
     {
-        /// <summary>
-        ///  Fires when this layout's children are updated by this layout. 0 for x axis update, 1 for y axis update.
-        /// </summary>
-        public ReplaySubject<int> LayoutUpdated = new ReplaySubject<int>();
-
         private struct Sizes
         {
             public float Min;
@@ -33,8 +27,8 @@ namespace Utilities.Unity.Layout
         /// </summary>
         public float spacing
         {
-            get { return m_Spacing; }
-            set { SetProperty(ref m_Spacing, value); }
+            get => m_Spacing;
+            set => SetProperty(ref m_Spacing, value);
         }
 
         /// <summary>
@@ -42,8 +36,8 @@ namespace Utilities.Unity.Layout
         /// </summary>
         public bool childForceExpandWidth
         {
-            get { return m_ChildForceExpandWidth; }
-            set { SetProperty(ref m_ChildForceExpandWidth, value); }
+            get => m_ChildForceExpandWidth;
+            set => SetProperty(ref m_ChildForceExpandWidth, value);
         }
 
         /// <summary>
@@ -51,33 +45,36 @@ namespace Utilities.Unity.Layout
         /// </summary>
         public bool childForceExpandHeight
         {
-            get { return m_ChildForceExpandHeight; }
-            set { SetProperty(ref m_ChildForceExpandHeight, value); }
+            get => m_ChildForceExpandHeight;
+            set => SetProperty(ref m_ChildForceExpandHeight, value);
         }
 
         /// <summary>
         ///     <para>
-        ///         Returns true if the Layout Group controls the widths of its children. Returns false if
-        ///         children control their own widths.
+        ///         Returns true if the Layout Group controls the widths of its children. Returns false if children control their
+        ///         own widths.
         ///     </para>
         /// </summary>
         public bool controlsChildWidths
         {
-            get { return m_ChildControlWidth; }
-            set { SetProperty(ref m_ChildControlWidth, value); }
+            get => m_ChildControlWidth;
+            set => SetProperty(ref m_ChildControlWidth, value);
         }
 
         /// <summary>
         ///     <para>
-        ///         Returns true if the Layout Group controls the heights of its children. Returns false if
-        ///         children control their own heights.
+        ///         Returns true if the Layout Group controls the heights of its children. Returns false if children control
+        ///         their own heights.
         ///     </para>
         /// </summary>
         public bool controlsChildHeights
         {
-            get { return m_ChildControlHeight; }
-            set { SetProperty(ref m_ChildControlHeight, value); }
+            get => m_ChildControlHeight;
+            set => SetProperty(ref m_ChildControlHeight, value);
         }
+
+        /// <summary>Fires when this layout's children are updated by this layout. 0 for x axis update, 1 for y axis update.</summary>
+        public ReplaySubject<int> LayoutUpdated = new ReplaySubject<int>();
 
         [SerializeField]
         protected float m_Spacing;
@@ -105,12 +102,13 @@ namespace Utilities.Unity.Layout
             bool controlSize = axis != 0 ? m_ChildControlHeight : m_ChildControlWidth;
             bool childForceExpand = axis != 0 ? childForceExpandHeight : childForceExpandWidth;
             float alignmentOnAxis = GetAlignmentOnAxis(axis);
-            
+
             if (isVertical ^ (axis == 1))
             {
                 float internalParentSize = parentSize - (axis != 0 ? padding.vertical : padding.horizontal);
                 List<RectTransform> rectChildren = GetChildren();
-                foreach (RectTransform rectChild in rectChildren) {
+                foreach (RectTransform rectChild in rectChildren)
+                {
                     float min;
                     float preferred;
                     float flexible;
@@ -139,20 +137,23 @@ namespace Utilities.Unity.Layout
                     pos = GetStartOffset(axis,
                         sizes.Preferred - (axis != 0 ? padding.vertical : padding.horizontal));
                 }
+
                 float t = 0.0f;
                 if (sizes.Min != (double) sizes.Preferred)
                 {
                     t = Mathf.Clamp01((float) ((parentSize - (double) sizes.Min) /
                                                (sizes.Preferred - (double) sizes.Min)));
                 }
+
                 float flexibleExcess = 0.0f;
                 if (parentSize > (double) sizes.Preferred && sizes.Flexible > 0.0)
                 {
                     flexibleExcess = (parentSize - sizes.Preferred) / sizes.Flexible;
                 }
-                
+
                 List<RectTransform> rectChildren = GetChildren();
-                foreach (RectTransform rectChild in rectChildren) {
+                foreach (RectTransform rectChild in rectChildren)
+                {
                     float min;
                     float preferred;
                     float flexible;
@@ -167,6 +168,7 @@ namespace Utilities.Unity.Layout
                         float num3 = (size - rectChild.sizeDelta[axis]) * alignmentOnAxis;
                         SetChildAlongAxis(rectChild, axis, pos + num3);
                     }
+
                     pos += size + spacing;
                 }
             }
@@ -189,10 +191,12 @@ namespace Utilities.Unity.Layout
                 preferred = LayoutUtility.GetPreferredSize(child, axis);
                 flexible = LayoutUtility.GetFlexibleSize(child, axis);
             }
+
             if (!childForceExpand)
             {
                 return;
             }
+
             flexible = Mathf.Max(flexible, 1f);
         }
 
@@ -231,23 +235,25 @@ namespace Utilities.Unity.Layout
                     totalFlexible += flexible;
                 }
             }
+
             if (!flag && rectChildren.Count > 0)
             {
                 totalMin -= spacing;
                 b -= spacing;
             }
+
             float totalPreferred = Mathf.Max(totalMin, b);
 
             return new Sizes {Min = totalMin, Preferred = totalPreferred, Flexible = totalFlexible};
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         protected override void Reset()
         {
             base.Reset();
             m_ChildControlWidth = false;
             m_ChildControlHeight = false;
         }
-        #endif
+#endif
     }
 }

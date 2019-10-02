@@ -3,8 +3,8 @@
 namespace Assets.Scripts.Utilities
 {
     /// <summary>
-    /// A component that causes the object to lerp towards a specific target Transform.
-    /// The speed of the lerp and a relative position to the target can be set.
+    ///     A component that causes the object to lerp towards a specific target Transform. The speed of the lerp and a
+    ///     relative position to the target can be set.
     /// </summary>
     public class FollowTransform : MonoBehaviour
     {

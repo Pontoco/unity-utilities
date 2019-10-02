@@ -6,9 +6,7 @@ using UnityEngine.UI;
 
 namespace Utilities.Unity.Layout
 {
-    /// <summary>
-    /// Provides hooks on a MonoBehavior to listen for its RectTransform updates.
-    /// </summary>
+    /// <summary>Provides hooks on a MonoBehavior to listen for its RectTransform updates.</summary>
     [ExecuteInEditMode]
     public class LayoutEvents : UIBehaviour
     {
@@ -22,10 +20,10 @@ namespace Utilities.Unity.Layout
         }
 
         /// <summary>
-        /// <see cref="LayoutRebuilder.MarkLayoutForRebuild"/> only recurses into children that have ILayoutController
-        /// components. However, they didn't consider that you might have a child further down with an ILayoutController,
-        /// even if the direct descendent of the marked layout doesn't. (there's a non-layout-controller in between).
-        /// This properly handles this case. 
+        ///     <see cref="LayoutRebuilder.MarkLayoutForRebuild" /> only recurses into children that have ILayoutController
+        ///     components. However, they didn't consider that you might have a child further down with an ILayoutController, even
+        ///     if the direct descendent of the marked layout doesn't. (there's a non-layout-controller in between). This properly
+        ///     handles this case.
         /// </summary>
         public static void MarkLayoutForRebuildRecursive(RectTransform root)
         {

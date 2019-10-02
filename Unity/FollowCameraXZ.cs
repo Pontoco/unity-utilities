@@ -2,10 +2,7 @@
 
 namespace Assets.Scripts.Utilities
 {
-    /// <summary>
-    ///     Follows the camera object's position, but only in the XZ plane. Has a fixed vertical
-    ///     offset for y.
-    /// </summary>
+    /// <summary>Follows the camera object's position, but only in the XZ plane. Has a fixed vertical offset for y.</summary>
     public class FollowCameraXZ : MonoBehaviour
     {
         public float VerticalOffset;

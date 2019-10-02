@@ -4,8 +4,8 @@ using UnityEngine.UI;
 namespace Utilities.Unity.Layout
 {
     /// <summary>
-    ///     This is a custom <see cref="HorizontalLayoutGroup" /> that is not an
-    ///     <see cref="ILayoutElement" />. See <see cref="LayoutGroupPlus" /> for more information.
+    ///     This is a custom <see cref="HorizontalLayoutGroup" /> that is not an <see cref="ILayoutElement" />. See
+    ///     <see cref="LayoutGroupPlus" /> for more information.
     ///     <para>Layout child layout elements horizontally.</para>
     /// </summary>
     [DisallowMultipleComponent]

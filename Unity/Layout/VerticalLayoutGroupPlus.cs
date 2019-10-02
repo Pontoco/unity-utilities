@@ -4,8 +4,8 @@ using UnityEngine.UI;
 namespace Utilities.Unity.Layout
 {
     /// <summary>
-    ///     This is a custom <see cref="VerticalLayoutGroup" /> that is not an
-    ///     <see cref="ILayoutElement" />. See <see cref="LayoutGroupPlus" /> for more information.
+    ///     This is a custom <see cref="VerticalLayoutGroup" /> that is not an <see cref="ILayoutElement" />. See
+    ///     <see cref="LayoutGroupPlus" /> for more information.
     ///     <para>Layout child layout elements vertically.</para>
     /// </summary>
     [DisallowMultipleComponent]
@@ -13,21 +13,20 @@ namespace Utilities.Unity.Layout
     [RequireComponent(typeof(RectTransform))]
     public class VerticalLayoutGroupPlus : HorizontalOrVerticalLayoutGroupPlus
     {
-
         /// <summary>
-        ///   <para>Called by the layout system.</para>
+        ///     <para>Called by the layout system.</para>
         /// </summary>
         public override void SetLayoutHorizontal()
         {
-            this.SetChildrenAlongAxis(0, true);
+            SetChildrenAlongAxis(0, true);
         }
 
         /// <summary>
-        ///   <para>Called by the layout system.</para>
+        ///     <para>Called by the layout system.</para>
         /// </summary>
         public override void SetLayoutVertical()
         {
-            this.SetChildrenAlongAxis(1, true);
+            SetChildrenAlongAxis(1, true);
         }
     }
 }

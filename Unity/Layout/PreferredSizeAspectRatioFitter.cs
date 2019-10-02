@@ -4,8 +4,8 @@ using UnityEngine.UI;
 namespace Utilities.Unity.Layout
 {
     /// <summary>
-    /// An AspectRatioFitter extension that sets the aspect ratio from the preferredSize of this layout element.
-    /// This is useful for using image / content sizes as the aspect ratio.
+    ///     An AspectRatioFitter extension that sets the aspect ratio from the preferredSize of this layout element. This
+    ///     is useful for using image / content sizes as the aspect ratio.
     /// </summary>
     [ExecuteInEditMode]
     [RequireComponent(typeof(RectTransform))]
@@ -15,12 +15,6 @@ namespace Utilities.Unity.Layout
         protected new void Start()
         {
             UpdateAspect();
-        }
-        
-        protected override void OnRectTransformDimensionsChange()
-        {
-            UpdateAspect();
-            base.OnRectTransformDimensionsChange();
         }
 
         private void UpdateAspect()
@@ -39,8 +33,14 @@ namespace Utilities.Unity.Layout
             }
         }
 
+        protected override void OnRectTransformDimensionsChange()
+        {
+            UpdateAspect();
+            base.OnRectTransformDimensionsChange();
+        }
+
         /// <summary>
-        ///   <para>Method called by the layout system.</para>
+        ///     <para>Method called by the layout system.</para>
         /// </summary>
         public override void SetLayoutHorizontal()
         {
@@ -48,7 +48,7 @@ namespace Utilities.Unity.Layout
         }
 
         /// <summary>
-        ///   <para>Method called by the layout system.</para>
+        ///     <para>Method called by the layout system.</para>
         /// </summary>
         public override void SetLayoutVertical()
         {
