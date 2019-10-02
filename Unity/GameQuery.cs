@@ -37,6 +37,14 @@ namespace Utilities {
     {
       return obj.GetComponent<T>() != null;
     }
+
+    /// <summary>
+    /// Returns if the given component exists on an object in the parent hierarchy of this gameobject. Just a convenience method for readability.
+    /// </summary>
+    public static bool HasComponentInParent<T>(this GameObject obj)
+    {
+      return obj.GetComponentInParent<T>() != null;
+    }
     
     /// <summary>
     /// Returns if the transform's gameobject has the given component on it. Just a convenience method for readability.
@@ -44,6 +52,14 @@ namespace Utilities {
     public static bool HasComponent<T>(this Transform transform)
     {
       return transform.GetComponent<T>() != null;
+    }
+
+    /// <summary>
+    /// Returns if the given component exists on an object in the parent hierarchy of this gameobject. Just a convenience method for readability.
+    /// </summary>
+    public static bool HasComponentInParent<T>(this Transform obj)
+    {
+      return obj.GetComponentInParent<T>() != null;
     }
   }
 }
