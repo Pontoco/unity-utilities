@@ -68,5 +68,25 @@ namespace Utilities
         {
             return obj.GetComponentInParent<T>() != null;
         }
+
+        /// <summary>Gets the component if it exists, or adds it if it doesn't.</summary>
+        public static T GetOrAddComponent<T>(this Component component)
+            where T : Component
+        {
+            return component.gameObject.GetOrAddComponent<T>();
+        }
+
+        /// <summary>Gets the component if it exists, or adds it if it doesn't.</summary>
+        public static T GetOrAddComponent<T>(this GameObject component)
+            where T : Component
+        {
+            T existing = component.GetComponent<T>();
+            if (existing != null)
+            {
+                return existing;
+            }
+
+            return component.gameObject.AddComponent<T>();
+        }
     }
 }
