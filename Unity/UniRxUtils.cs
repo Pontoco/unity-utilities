@@ -1,5 +1,7 @@
 ﻿using System;
 using UniRx;
+using UniRx.Triggers;
+using UnityEngine;
 
 namespace Utilities
 {
@@ -36,6 +38,13 @@ namespace Utilities
         public static IDisposable Subscribe<Unit>(this UniRx.IObservable<Unit> source, Action operation)
         {
             return source.Subscribe(_ => operation());
+        }
+
+        /// <summary>Disposes this disposable when the gameobject the given component is attached to is destroyed.</summary>
+        public static void DisposeOnDestroy(this IDisposable disposable, Component obj)
+        {
+            // Register an on destroy listener. (allocates)
+            obj.OnDestroyAsObservable().First().Subscribe(disposable.Dispose);
         }
     }
 }
