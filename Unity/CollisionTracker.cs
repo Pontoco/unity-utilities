@@ -56,5 +56,11 @@ namespace Global.Utilities.Unity
         {
             return currentColliding.Select(c => c.gameObject).Distinct();
         }
+
+        /// <summary>An iterator of the currently colliding Colliders.</summary>
+        public IEnumerable<Collider> GetColliding()
+        {
+            return currentColliding;
+        }
     }
 }
