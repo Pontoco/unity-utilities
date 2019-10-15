@@ -162,5 +162,27 @@ namespace Utilities
             // Set swing
             swing = q * Quaternion.Inverse(twist);
         }
+
+        /// <summary>Calculates the distance from this point to a given ray. </summary>
+        /// <remarks>Uses the technique from this video: https://youtu.be/tYUtWYGUqgw </remarks>
+        public static float DistanceToRay(this Vector3 point, Ray ray)
+        {
+            return Vector3.Cross(point - ray.origin, ray.direction).magnitude;
+        }
+
+        /// <summary>
+        ///     Calculates a vector offset of this point from the given ray. Subtracting this value from the point will place
+        ///     it on the ray. This vector represents the shortest distance from the ray to the point.
+        /// </summary>
+        public static Vector3 OffsetFromRay(this Vector3 point, Ray ray)
+        {
+            Vector3 relativePoint = point - ray.origin; // A vector from the ray origin to the point
+            Vector3 projection =
+                Vector3.Project(relativePoint, ray.direction); // Vector from the ray origin to the projected point.
+            Vector3
+                orthogonalProjection =
+                    relativePoint - projection; // A vector from the projected point to the original point.
+            return orthogonalProjection; // Invert the vector to give the offset
+        }
     }
 }
