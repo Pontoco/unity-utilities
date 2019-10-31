@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sirenix.Serialization;
+using UnityEngine;
 
 namespace Assets.Scripts.Utilities
 {
@@ -6,7 +7,7 @@ namespace Assets.Scripts.Utilities
     ///     Causes an object to maintain a given relative position to the camera object. Movement has a spring to it,
     ///     isn't instant.
     /// </summary>
-    public class SpringFollowCamera : MonoBehaviour
+    public class SpringFollowTransform : MonoBehaviour
     {
         // The distance from the camera that this object should be placed
         // in meters.
@@ -20,16 +21,16 @@ namespace Assets.Scripts.Utilities
         // The speed at which this object changes it's rotation.
         public float RotationLerpSpeed = 5f;
 
-        // The camera this object will be in front of.
-        public Camera Camera;
+        // The transform this object will be in front of.
+        public Transform Target;
 
         /// <summary>Initializes variables and verifies that necesary components exist.</summary>
         private void Awake()
         {
-            if (Camera == null)
+            if (Target == null)
             {
                 enabled = false;
-                Debug.LogError("Failed to find the Camera component.");
+                Debug.LogError("Failed to find the Target property.");
             }
         }
 
@@ -38,13 +39,13 @@ namespace Assets.Scripts.Utilities
         {
             // Move the object in front of the camera.
             float posSpeed = Time.deltaTime * PositionLerpSpeed;
-            Vector3 posTo = Camera.transform.position + Camera.transform.forward * RestZ +
-                            Camera.transform.right * RestX + Camera.transform.up * RestY;
+            Vector3 posTo = Target.transform.position + Target.transform.forward * RestZ +
+                            Target.transform.right * RestX + Target.transform.up * RestY;
             transform.position = Vector3.Slerp(transform.position, posTo, posSpeed);
 
             // Rotate the object to face the camera.
             float rotSpeed = Time.deltaTime * RotationLerpSpeed;
-            Quaternion rotTo = Quaternion.LookRotation(transform.position - Camera.transform.position);
+            Quaternion rotTo = Quaternion.LookRotation(transform.position - Target.transform.position);
             transform.rotation = Quaternion.Slerp(transform.rotation, rotTo, rotSpeed);
         }
     }
