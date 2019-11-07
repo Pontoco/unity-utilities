@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Conditions;
 using UnityEngine;
 
@@ -81,6 +82,21 @@ namespace Utilities.Unity
             GameObject obj = Object.Instantiate(prefab, worldPosition, worldRotation);
             prefab.SetActive(prevActive);
             return obj;
+        }
+
+        /// <summary>
+        ///     Prints out a summary of the number of each <see cref="System.Type" /> of <see cref="UnityEngine.Object" />
+        ///     that currently exists in memory. Prints the count of each type on a log line.
+        /// </summary>
+        /// <remarks>Printing this much stuff is slow. Use for memory debugging.</remarks>
+        public static void PrintUnityObjectsAllocated()
+        {
+            Object[] objcts = Object.FindObjectsOfType<Object>();
+            Debug.Log("================================================");
+            Debug.Log("================================================");
+            Debug.Log("Total objects: " + objcts.Length);
+            objcts.GroupBy(x => x.GetType().FullName).OrderByDescending(g => g.Count())
+                  .Select(g => $"{g.Key}: {g.Count()}").PrintOnLines();
         }
     }
 }
