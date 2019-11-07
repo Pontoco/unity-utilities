@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Conditions;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -119,6 +120,28 @@ namespace ASG.Utilites.Unity
 
             yield return null;
             yield return null;
+        }
+    }
+
+    public class WaitUtils
+    {
+        /// <summary>
+        ///     Suspends the coroutine for a number of seconds, but uses FixedUpdate time, rather than Update time as in
+        ///     <see cref="WaitForSeconds" />.
+        /// </summary>
+        public static IEnumerator WaitForSecondsFixed(float seconds)
+        {
+            Condition.Requires(Time.inFixedTimeStep);
+
+            float startTime = Time.fixedTime;
+            while (Time.fixedTime - startTime < seconds)
+            {
+                // Wait for the next fixed update and check the time.
+                yield return new WaitForFixedUpdate();
+                Condition.Requires(Time.inFixedTimeStep);
+            }
+
+            // First fixedupdate after the elapsed time.
         }
     }
 }
