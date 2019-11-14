@@ -60,6 +60,9 @@ namespace Global.Utilities.Unity
         /// <summary>An iterator of the currently colliding Colliders.</summary>
         public IEnumerable<Collider> GetColliding()
         {
+            // Remove destroyed objects (they don't ever trigger a TriggerExit).
+            currentColliding.RemoveWhere(c => c == null);
+
             return currentColliding;
         }
     }
