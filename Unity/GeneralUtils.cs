@@ -67,11 +67,15 @@ namespace Utilities.Unity
         ///     <para>The gameobject returned should have SetActive(true) called on it to finish setup.</para>
         /// </summary>
         /// <param name="prefab">A prefab asset.</param>
-        /// <param name="worldPosition">The position of the new gameobject in world space.</param>
-        /// <param name="worldRotation">The rotation of the new gameobject in world space.</param>
+        /// <param name="position">The position of the new gameobject in the given space.</param>
+        /// <param name="rotation">The rotation of the new gameobject in the given space.</param>
+        /// <param name="coordinateSpace">What coordinate space the previous position and rotation are in.</param>
+        /// <param name="parent">The parent to create this object as a child under.</param>
         /// <returns>A new gameobject that is not active.</returns>
-        public static GameObject InstantiateDisabled(GameObject prefab, Vector3 worldPosition = new Vector3(),
-                                                     Quaternion worldRotation = new Quaternion())
+        public static GameObject InstantiateDisabled(GameObject prefab, Vector3 position = new Vector3(),
+                                                     Quaternion rotation = new Quaternion(),
+                                                     Space coordinateSpace = Space.Self,
+                                                     Transform parent = null)
         {
             // Make sure the input is a prefab not an in scene game object.
             Condition.Requires(prefab.scene.name)
@@ -79,7 +83,18 @@ namespace Utilities.Unity
 
             bool prevActive = prefab.activeSelf;
             prefab.SetActive(false);
-            GameObject obj = Object.Instantiate(prefab, worldPosition, worldRotation);
+            GameObject obj = Object.Instantiate(prefab, parent);
+            if (coordinateSpace == Space.World)
+            {
+                obj.transform.position = position;
+                obj.transform.rotation = rotation;
+            }
+            else
+            {
+                obj.transform.localPosition = position;
+                obj.transform.localRotation = rotation;
+            }
+
             prefab.SetActive(prevActive);
             return obj;
         }
