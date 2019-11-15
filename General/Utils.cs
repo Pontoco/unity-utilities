@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Conditions;
 using Optional;
@@ -165,5 +166,43 @@ public static class Utils
         TValue value = valueToInsert();
         dictionary[key] = value;
         return value;
+    }
+
+    /// <summary>Scans the given directory and deletes all files within it, except the most recent N.</summary>
+    /// <param name="directoryPath">The directory to scan.</param>
+    /// <param name="numberToKeep">The number of files to keep.</param>
+    /// <param name="searchPattern">This operation will only look at the files that match this search pattern.</param>
+    public static void KeepLatestFiles(string directoryPath, int numberToKeep, string searchPattern = "*")
+    {
+        DirectoryInfo directory = new DirectoryInfo(directoryPath);
+        FileInfo[] fileInfos = directory.GetFiles(searchPattern, SearchOption.TopDirectoryOnly);
+
+        // Keep the most recent recordings, but delete the rest.
+        IEnumerable<FileInfo> filesToDelete =
+            fileInfos.OrderByDescending(f => f.CreationTime).Skip(numberToKeep);
+
+        foreach (FileInfo fileInfo in filesToDelete)
+        {
+            fileInfo.Delete();
+        }
+    }
+
+    /// <summary>Scans the given directory and deletes all directories within it, except the most recent N.</summary>
+    /// <param name="directoryPath">The directory to scan.</param>
+    /// <param name="numberToKeep">The number of directories to keep.</param>
+    /// <param name="searchPattern">This operation will only look at the directories that match this search pattern.</param>
+    public static void KeepLatestDirectories(string directoryPath, int numberToKeep, string searchPattern = "*")
+    {
+        DirectoryInfo directory = new DirectoryInfo(directoryPath);
+        DirectoryInfo[] directoryInfos = directory.GetDirectories(searchPattern, SearchOption.TopDirectoryOnly);
+
+        // Keep the most recent recordings, but delete the rest.
+        IEnumerable<DirectoryInfo> directoriesToDelete =
+            directoryInfos.OrderByDescending(f => f.CreationTime).Skip(numberToKeep);
+
+        foreach (DirectoryInfo directoryInfo in directoriesToDelete)
+        {
+            directoryInfo.Delete();
+        }
     }
 }
