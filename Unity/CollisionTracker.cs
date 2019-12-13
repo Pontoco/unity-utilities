@@ -45,6 +45,12 @@ namespace Global.Utilities.Unity
             currentColliding.Remove(collider);
         }
 
+        /// <summary>Returns whether this collider is present in the "currentColliding" set, regardless of the collider's state.</summary>
+        public bool Contains(Collider coll)
+        {
+            return currentColliding.Contains(coll);
+        }
+
         /// <summary>Whether there is a tracked collision currently happening with the given gameobject.</summary>
         public bool IsColliding(GameObject gameObj)
         {
