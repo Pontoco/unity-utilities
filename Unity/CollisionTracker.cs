@@ -45,16 +45,22 @@ namespace Global.Utilities.Unity
             currentColliding.Remove(collider);
         }
 
+        /// <summary>Returns whether this collider is present in the "currentColliding" set, regardless of the collider's state.</summary>
+        public bool Contains(Collider coll)
+        {
+            return currentColliding.Contains(coll);
+        }
+
         /// <summary>Whether there is a tracked collision currently happening with the given gameobject.</summary>
         public bool IsColliding(GameObject gameObj)
         {
-            return currentColliding.Any(c => c.gameObject == gameObj);
+            return GetColliding().Any(c => c.gameObject == gameObj);
         }
 
         /// <returns>An iterator of the currently colliding gameobjects.</returns>
         public IEnumerable<GameObject> GetCollidingObjects()
         {
-            return currentColliding.Select(c => c.gameObject).Distinct();
+            return GetColliding().Select(c => c.gameObject).Distinct();
         }
 
         /// <summary>An iterator of the currently colliding Colliders.</summary>
@@ -63,7 +69,8 @@ namespace Global.Utilities.Unity
             // Remove destroyed objects (they don't ever trigger a TriggerExit).
             currentColliding.RemoveWhere(c => c == null);
 
-            return currentColliding;
+            // Filter out any disabled colliders (they must have been disabled while inside the collision tracker)
+            return currentColliding.Where(c => c.enabled);
         }
     }
 }
