@@ -13,7 +13,7 @@ namespace AsgUtils.Unity
     ///     Override layers on top of the BaseValue are stored in a stack. The most recent override is used as the
     ///     'perceived' value.
     /// </remarks>
-    public class LayeredValue<T>
+    public class ModifierStack<T>
     {
         /// <summary>
         ///     The base value. This value is never removed. If you want to make permanent changes to a value (rather than
@@ -30,7 +30,7 @@ namespace AsgUtils.Unity
 
         /// <param name="baseValue">The value this object starts with.</param>
         /// <param name="onValueUpdate">A callback that is run whenever the perceived value of this object may have changed.</param>
-        public LayeredValue(T baseValue, Action<T> onValueUpdate = null)
+        public ModifierStack(T baseValue, Action<T> onValueUpdate = null)
         {
             this.onValueUpdate = onValueUpdate;
             layers.Add(new Layer(this, baseValue));
@@ -96,11 +96,11 @@ namespace AsgUtils.Unity
                 }
             }
 
-            private readonly LayeredValue<T> parent;
+            private readonly ModifierStack<T> parent;
             private T value;
 
             /// <summary>Create a new layer.</summary>
-            internal Layer(LayeredValue<T> parent, T value)
+            internal Layer(ModifierStack<T> parent, T value)
             {
                 this.value = value;
                 this.parent = parent;
