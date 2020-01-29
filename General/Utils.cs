@@ -191,7 +191,8 @@ public static class Utils
     /// <param name="directoryPath">The directory to scan.</param>
     /// <param name="numberToKeep">The number of directories to keep.</param>
     /// <param name="searchPattern">This operation will only look at the directories that match this search pattern.</param>
-    public static void KeepLatestDirectories(string directoryPath, int numberToKeep, string searchPattern = "*")
+    /// <param name="fullPathsToIgnore">Any full file paths included in this array won't be deleted.</param>
+    public static void KeepLatestDirectories(string directoryPath, int numberToKeep, string searchPattern = "*", string[] fullPathsToIgnore = null)
     {
         DirectoryInfo directory = new DirectoryInfo(directoryPath);
         DirectoryInfo[] directoryInfos = directory.GetDirectories(searchPattern, SearchOption.TopDirectoryOnly);
@@ -202,7 +203,10 @@ public static class Utils
 
         foreach (DirectoryInfo directoryInfo in directoriesToDelete)
         {
-            directoryInfo.Delete();
+            if (fullPathsToIgnore != null && !fullPathsToIgnore.Contains(directoryInfo.FullName))
+            {
+                directoryInfo.Delete();
+            }
         }
     }
 }
