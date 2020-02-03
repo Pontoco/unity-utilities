@@ -1,5 +1,4 @@
-﻿using Sirenix.Serialization;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Utilities
 {
