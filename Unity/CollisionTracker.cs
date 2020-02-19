@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Conditions;
 using UnityEngine;
@@ -12,25 +13,32 @@ namespace Global.Utilities.Unity
     /// </summary>
     public class CollisionTracker
     {
-        private readonly bool ignoreTriggers;
+        private Func<Collider, bool> filter;
 
         private readonly HashSet<Collider> currentColliding = new HashSet<Collider>();
 
         /// <param name="ignoreTriggers">When true, collisions with triggers are ignored.</param>
-        public CollisionTracker(bool ignoreTriggers = false)
+        public CollisionTracker(bool ignoreTriggers = false, Func<Collider, bool> filter = null)
         {
-            this.ignoreTriggers = ignoreTriggers;
+            if (ignoreTriggers && filter != null)
+            {
+                throw new Exception("ignoreTriggers overrides filter. Only one should be set.");
+            }
+
+            if (ignoreTriggers)
+            {
+                this.filter = c => !c.isTrigger;
+            }
+            else
+            {
+                this.filter = filter;
+            }
         }
 
         /// <summary>Call this when a collision starts.</summary>
         public void StartCollision(Collider collider)
         {
             Condition.Requires(currentColliding.Contains(collider)).IsFalse();
-
-            if (ignoreTriggers && collider.isTrigger)
-            {
-                return;
-            }
 
             currentColliding.Add(collider);
         }
@@ -41,7 +49,6 @@ namespace Global.Utilities.Unity
         {
             // We don't check for trigger here, because if the collider became a trigger during the collision,
             // we still want to remove it.
-
             currentColliding.Remove(collider);
         }
 
@@ -70,7 +77,7 @@ namespace Global.Utilities.Unity
             currentColliding.RemoveWhere(c => c == null);
 
             // Filter out any disabled colliders (they must have been disabled while inside the collision tracker)
-            return currentColliding.Where(c => c.enabled);
+            return currentColliding.Where(c => c.enabled && (filter == null || filter(c)));
         }
     }
 }
