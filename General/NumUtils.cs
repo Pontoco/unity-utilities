@@ -126,6 +126,12 @@ namespace Utilities
             return result;
         }
 
+        /// <summary>The magnitude of a quaternion.</summary>
+        public static float Magnitude(this Quaternion quat)
+        {
+            return Mathf.Sqrt(quat.SquareMagnitude());
+        }
+
         /// <summary>The square magnitude of a quaternion.</summary>
         public static float SquareMagnitude(this Quaternion quat)
         {
