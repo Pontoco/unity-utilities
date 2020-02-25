@@ -13,26 +13,23 @@ namespace Global.Utilities.Unity
     /// </summary>
     public class CollisionTracker
     {
-        private Func<Collider, bool> filter;
+        private Func<Collider, bool> filter = c => true;
 
         private readonly HashSet<Collider> currentColliding = new HashSet<Collider>();
 
         /// <param name="ignoreTriggers">When true, collisions with triggers are ignored.</param>
-        public CollisionTracker(bool ignoreTriggers = false, Func<Collider, bool> filter = null)
+        public CollisionTracker(bool ignoreTriggers = false)
         {
-            if (ignoreTriggers && filter != null)
-            {
-                throw new Exception("ignoreTriggers overrides filter. Only one should be set.");
-            }
-
             if (ignoreTriggers)
             {
-                this.filter = c => !c.isTrigger;
+                filter = c => !c.isTrigger;
             }
-            else
-            {
-                this.filter = filter;
-            }
+        }
+
+        /// <param name="filter">A mapping that says whether a specific collider is considered 'tracked'.</param>
+        public CollisionTracker(Func<Collider, bool> filter)
+        {
+            this.filter = filter;
         }
 
         /// <summary>Call this when a collision starts.</summary>
