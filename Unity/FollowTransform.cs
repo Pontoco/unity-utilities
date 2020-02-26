@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Assets.Scripts.Utilities
 {
@@ -11,20 +12,56 @@ namespace Assets.Scripts.Utilities
         [Tooltip("The target to follow.")]
         public Transform Target;
 
-        [Tooltip("The relative location from the target that this object should be placed.  In world space.")]
-        public Vector3 RestPosition;
+        [Tooltip("Do the follow update in the FixedUpdate.")]
+        public bool UseFixedUpdate = true;
 
+        [Tooltip("Whether to follow target rotation as well.")]
+        public bool FollowRotation;
+
+        [Tooltip("Whether to ease towards the target transform.")]
+        public bool UseEasing;
+
+        [ShowIf("UseEasing")]
         [Tooltip("The speed at which this object changes it's position.")]
         public float PositionLerpSpeed = .05f;
 
+        [Tooltip("The relative location from the target that this object should be placed.  In world space.")]
+        public Vector3 RestPosition;
+
+        private void FixedUpdate()
+        {
+            if (!UseFixedUpdate)
+            {
+                return;
+            }
+
+            UpdateTransform();
+        }
+
         private void Update()
+        {
+            if (UseFixedUpdate)
+            {
+                return;
+            }
+
+            UpdateTransform();
+        }
+
+        private void UpdateTransform()
         {
             if (Target != null)
             {
-                float posSpeed = Time.deltaTime * PositionLerpSpeed;
+                float speed = UseEasing ? Time.deltaTime * PositionLerpSpeed : 1;
+
                 Vector3 posTo = Target.position + Target.forward * RestPosition.z +
                                 Target.right * RestPosition.x + Target.up * RestPosition.y;
-                transform.position = Vector3.LerpUnclamped(transform.position, posTo, posSpeed);
+                transform.position = Vector3.LerpUnclamped(transform.position, posTo, speed);
+
+                if (FollowRotation)
+                {
+                    transform.rotation = Quaternion.SlerpUnclamped(transform.rotation, Target.rotation, speed);
+                }
             }
         }
     }
