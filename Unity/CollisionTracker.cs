@@ -13,7 +13,9 @@ namespace Global.Utilities.Unity
     /// </summary>
     public class CollisionTracker
     {
-        private Func<Collider, bool> filter = c => true;
+        public bool EnableDebugging = false;
+
+        private readonly Func<Collider, bool> filter = c => true;
 
         private readonly HashSet<Collider> currentColliding = new HashSet<Collider>();
 
@@ -35,6 +37,11 @@ namespace Global.Utilities.Unity
         /// <summary>Call this when a collision starts.</summary>
         public void StartCollision(Collider collider)
         {
+            if (EnableDebugging)
+            {
+                Debug.Log($"Enter: [{collider.gameObject.name}]");
+            }
+
             Condition.Requires(currentColliding.Contains(collider)).IsFalse();
 
             currentColliding.Add(collider);
@@ -44,6 +51,11 @@ namespace Global.Utilities.Unity
         /// <param name="collider"></param>
         public void EndCollision(Collider collider)
         {
+            if (EnableDebugging)
+            {
+                Debug.Log($"Exit: [{collider.gameObject.name}]");
+            }
+
             // We don't check for trigger here, because if the collider became a trigger during the collision,
             // we still want to remove it.
             currentColliding.Remove(collider);
