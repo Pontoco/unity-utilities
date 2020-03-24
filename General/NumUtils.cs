@@ -78,12 +78,14 @@ namespace Utilities
         /// <returns></returns>
         public static float MapValueToUnit(float fullValue, float start, float end, bool clamp = false)
         {
+
+            float result = (fullValue - start) / (end - start);
             if (clamp)
             {
-                fullValue = Clamp(fullValue, start, end);
+                result = Clamp(result, 0, 1);
             }
 
-            return (fullValue - start) / (end - start);
+            return result;
         }
 
         /// <summary>Maps a value linearly from one range to another. Example: 5, (0, 10), (4, 8) Result: 6</summary>
