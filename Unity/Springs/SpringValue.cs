@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Global.Utilities.Unity.Springs
 {
@@ -11,12 +13,15 @@ namespace Global.Utilities.Unity.Springs
     public abstract class SpringValue<T> where T : struct
     {
         /// <summary>The target value this spring is attempting to move towards.</summary>
+        [ReadOnly]
         public T TargetValue;
 
         /// <summary>The current value for this spring.</summary>
+        [ReadOnly]
         public T CurrentValue;
 
         /// <summary>The velocity of the spring.</summary>
+        [ReadOnly]
         public T CurrentVelocity;
 
         /// <summary>
@@ -71,6 +76,7 @@ namespace Global.Utilities.Unity.Springs
     ///     without having to setup all of the boilerplate.  The overall formula is F = -kx - cv.  Where k is the spring
     ///     constant, x is the value different, c is the dampening and v is the velocity.
     /// </summary>
+    [Serializable]
     public class SpringFloat : SpringValue<float>
     {
         /// <inheritdoc />
@@ -89,6 +95,7 @@ namespace Global.Utilities.Unity.Springs
     ///     properties without having to setup all of the boilerplate.  The overall formula is F = -kx - cv.  Where k is the
     ///     spring constant, x is the value different, c is the dampening and v is the velocity.
     /// </summary>
+    [Serializable]
     public class SpringVector3 : SpringValue<Vector3>
     {
         /// <inheritdoc />
