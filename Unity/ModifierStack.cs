@@ -73,7 +73,7 @@ namespace AsgUtils.Unity
         public void RemoveOverrideLayer(ModifierLayer<T> toRemove)
         {
             bool removed = layers.Remove(toRemove);
-            Assert.IsTrue(removed);
+            Assert.IsTrue(removed, "Didn't find this override layer in the list of overrides.");
 
             OnValuePossiblyChanged();
         }
