@@ -79,6 +79,16 @@ namespace Global.Utilities.Unity.Springs
     [Serializable]
     public class SpringFloat : SpringValue<float>
     {
+        /// <summary>
+        ///     Creates a spring, with the given spring constants. Defaults are suitable for small scale springs between 1..10
+        ///     ish.
+        /// </summary>
+        public SpringFloat(float k = 10, float dampening = 1)
+        {
+            SpringConstantK = k;
+            SpringConstantDampening = dampening;
+        }
+
         /// <inheritdoc />
         protected override void StepInternal(float dt)
         {
