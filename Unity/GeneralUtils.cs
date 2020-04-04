@@ -49,6 +49,30 @@ namespace Utilities.Unity
             return result;
         }
 
+        /// <summary>Returns the set of active colliders on this gameobject and children.</summary>
+        public static IEnumerable<Collider> GetActiveCollidersInChildren(this GameObject gameObject)
+        {
+            return gameObject.GetComponentsInChildren<Collider>().Where(c => c.enabled);
+        }
+
+        /// <summary>Returns the set of active colliders on this gameobject and children.</summary>
+        public static IEnumerable<Collider> GetActiveCollidersInChildren(this Component component)
+        {
+            return component.GetComponentsInChildren<Collider>().Where(c => c.enabled);
+        }
+
+        /// <summary>Returns the set of active colliders on this gameobject.</summary>
+        public static IEnumerable<Collider> GetActiveColliders(this GameObject gameObject)
+        {
+            return gameObject.GetComponents<Collider>().Where(c => c.enabled);
+        }
+
+        /// <summary>Returns the set of active colliders on this gameobject.</summary>
+        public static IEnumerable<Collider> GetActiveColliders(this Component component)
+        {
+            return component.GetComponents<Collider>().Where(c => c.enabled);
+        }
+
         /// <summary>Returns the full path to this transform including parents and the name of this gameobject.</summary>
         /// <returns>A string in the form "rootobject/someobject/otherobject/thisobject"</returns>
         public static string GetPath(this Transform transform)
