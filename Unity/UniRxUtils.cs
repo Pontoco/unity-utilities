@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using ASG.Utilites.Unity;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -45,6 +47,14 @@ namespace Utilities
         {
             // Register an on destroy listener. (allocates)
             obj.OnDestroyAsObservable().First().Subscribe(disposable.Dispose);
+        }
+
+        /// <summary>Waits for the first event from this observable and continues. Runs on the fixed update.</summary>
+        public static IEnumerator ToYieldFixed<T>(this UniRx.IObservable<T> source)
+        {
+            bool finished = false;
+            source.First().Subscribe(() => finished = true);
+            yield return WaitUtils.WaitUntilFixed(() => finished);
         }
     }
 }

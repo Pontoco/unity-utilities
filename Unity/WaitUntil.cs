@@ -143,5 +143,21 @@ namespace ASG.Utilites.Unity
 
             // First fixedupdate after the elapsed time.
         }
+
+        /// <summary>Like <see cref="WaitUntil" />, but runs on FixedUpdate.</summary>
+        public static IEnumerator WaitUntilFixed(Func<bool> predicate, float? timeout = null)
+        {
+            Condition.Requires(Time.inFixedTimeStep);
+
+            float startTime = Time.fixedTime;
+
+            // Break out if the predicate is true or the timeout is exceeded.
+            while ((timeout == null || Time.fixedTime - startTime < timeout) && !predicate())
+            {
+                // Wait for the next fixed update and check the time.
+                yield return new WaitForFixedUpdate();
+                Condition.Requires(Time.inFixedTimeStep);
+            }
+        }
     }
 }
