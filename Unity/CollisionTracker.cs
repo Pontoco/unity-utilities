@@ -86,7 +86,7 @@ namespace Global.Utilities.Unity
             currentColliding.RemoveWhere(c => c == null);
 
             // Filter out any disabled colliders (they must have been disabled while inside the collision tracker)
-            return currentColliding.Where(c => c.enabled && (filter == null || filter(c)));
+            return currentColliding.Where(c => c.gameObject.activeInHierarchy && c.enabled && (filter == null || filter(c)));
         }
     }
 }
