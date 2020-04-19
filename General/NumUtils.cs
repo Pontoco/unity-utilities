@@ -50,7 +50,7 @@ namespace Utilities
         /// <summary>Returns the distance between two values in modulo space.</summary>
         public static float DistanceInModulo(float value, float target, float modulo)
         {
-            var diff = Math.Abs(value - target);
+            float diff = Math.Abs(value - target);
             return Math.Min(diff, modulo - diff);
         }
 
@@ -78,7 +78,6 @@ namespace Utilities
         /// <returns></returns>
         public static float MapValueToUnit(float fullValue, float start, float end, bool clamp = false)
         {
-
             float result = (fullValue - start) / (end - start);
             if (clamp)
             {
@@ -93,7 +92,7 @@ namespace Utilities
         public static float MapBetweenRanges(float value, float sourceRangeStart, float sourceRangeEnd,
                                              float destinationRangeStart, float destinationRangeEnd, bool clamp = true)
         {
-            var unitValue = MapValueToUnit(value, sourceRangeStart, sourceRangeEnd, clamp);
+            float unitValue = MapValueToUnit(value, sourceRangeStart, sourceRangeEnd, clamp);
             return MapUnitToRange(unitValue, destinationRangeStart, destinationRangeEnd, clamp);
         }
 
@@ -179,6 +178,50 @@ namespace Utilities
             return Vector3.Cross(point - ray.origin, ray.direction).magnitude;
         }
 
+        /// <summary>Zeroes out specific components on a vector.</summary>
+        /// <remarks>Ideally this will get inlined and evaluated at compile time, most of the time.</remarks>
+        public static Vector3 Zero(this Vector3 vector, bool x = false, bool y = false, bool z = false)
+        {
+            if (x)
+            {
+                vector.x = 0;
+            }
+
+            if (y)
+            {
+                vector.y = 0;
+            }
+
+            if (z)
+            {
+                vector.z = 0;
+            }
+
+            return vector;
+        }
+
+        /// <summary>Copies certain components from one vector to another, and returns the result.</summary>
+        /// <remarks>Note that you have to use the returned value.</remarks>
+        public static Vector3 Copy(this Vector3 vector, Vector3 target, bool x = false, bool y = false, bool z = false)
+        {
+            if (x)
+            {
+                target.x = vector.x;
+            }
+
+            if (y)
+            {
+                target.y = vector.y;
+            }
+
+            if (z)
+            {
+                target.z = vector.z;
+            }
+
+            return target;
+        }
+
         /// <summary>
         ///     Calculates a vector offset of this point from the given ray. Subtracting this value from the point will place
         ///     it on the ray. This vector represents the shortest distance from the ray to the point.
@@ -204,7 +247,7 @@ namespace Utilities
         /// </remarks>
         public static Vector3 TransformPointUnscaled(this Transform transform, Vector3 position)
         {
-            var localToWorldMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+            Matrix4x4 localToWorldMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
             return localToWorldMatrix.MultiplyPoint3x4(position);
         }
 
@@ -215,7 +258,7 @@ namespace Utilities
         /// </remarks>
         public static Vector3 InverseTransformPointUnscaled(this Transform transform, Vector3 position)
         {
-            var worldToLocalMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one).inverse;
+            Matrix4x4 worldToLocalMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one).inverse;
             return worldToLocalMatrix.MultiplyPoint3x4(position);
         }
 
@@ -226,7 +269,7 @@ namespace Utilities
         /// </remarks>
         public static Vector3 TransformVectorUnscaled(this Transform transform, Vector3 vector)
         {
-            var localToWorldMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+            Matrix4x4 localToWorldMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
             return localToWorldMatrix.MultiplyVector(vector);
         }
 
@@ -237,7 +280,7 @@ namespace Utilities
         /// </remarks>
         public static Vector3 InverseTransformVectorUnscaled(this Transform transform, Vector3 vector)
         {
-            var worldToLocalMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one).inverse;
+            Matrix4x4 worldToLocalMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one).inverse;
             return worldToLocalMatrix.MultiplyVector(vector);
         }
 
